@@ -1,3 +1,4 @@
+
 class WeatherModel {
     WeatherModel({
         required this.coord,
@@ -10,7 +11,6 @@ class WeatherModel {
         required this.name,
         required this.cod,
     });
-
     final Coord? coord;
     final List<Weather> weather;
     final Main? main;
@@ -20,7 +20,6 @@ class WeatherModel {
     final int? id;
     final String? name;
     final String? cod;
-
     factory WeatherModel.fromJson(Map<String, dynamic> json){ 
         return WeatherModel(
             coord: json["coord"] == null ? null : Coord.fromJson(json["coord"]),
@@ -34,7 +33,6 @@ class WeatherModel {
             cod: json["cod"],
         );
     }
-
     Map<String, dynamic> toJson() => {
         "coord": coord?.toJson(),
         "weather": weather.map((x) => x.toJson()).toList(),
@@ -46,51 +44,39 @@ class WeatherModel {
         "name": name,
         "cod": cod,
     };
-
 }
-
 class Clouds {
     Clouds({
         required this.all,
     });
-
     final int? all;
-
     factory Clouds.fromJson(Map<String, dynamic> json){ 
         return Clouds(
             all: json["all"],
         );
     }
-
     Map<String, dynamic> toJson() => {
         "all": all,
     };
-
 }
-
 class Coord {
     Coord({
         required this.lon,
         required this.lat,
     });
-
     final double? lon;
     final double? lat;
-
     factory Coord.fromJson(Map<String, dynamic> json){ 
         return Coord(
             lon: json["lon"],
             lat: json["lat"],
         );
     }
-
     Map<String, dynamic> toJson() => {
         "lon": lon,
         "lat": lat,
     };
-
 }
-
 class Main {
     Main({
         required this.temp,
@@ -102,7 +88,6 @@ class Main {
         required this.seaLevel,
         required this.grndLevel,
     });
-
     final double? temp;
     final double? feelsLike;
     final double? tempMin;
@@ -111,7 +96,6 @@ class Main {
     final int? humidity;
     final int? seaLevel;
     final int? grndLevel;
-
     factory Main.fromJson(Map<String, dynamic> json){ 
         return Main(
             temp: json["temp"],
@@ -124,7 +108,6 @@ class Main {
             grndLevel: json["grnd_level"],
         );
     }
-
     Map<String, dynamic> toJson() => {
         "temp": temp,
         "feels_like": feelsLike,
@@ -135,20 +118,16 @@ class Main {
         "sea_level": seaLevel,
         "grnd_level": grndLevel,
     };
-
 }
-
 class Sys {
     Sys({
         required this.country,
         required this.sunrise,
         required this.sunset,
     });
-
     final String? country;
     final int? sunrise;
     final int? sunset;
-
     factory Sys.fromJson(Map<String, dynamic> json){ 
         return Sys(
             country: json["country"],
@@ -156,15 +135,12 @@ class Sys {
             sunset: json["sunset"],
         );
     }
-
     Map<String, dynamic> toJson() => {
         "country": country,
         "sunrise": sunrise,
         "sunset": sunset,
     };
-
 }
-
 class Weather {
     Weather({
         required this.id,
@@ -172,12 +148,10 @@ class Weather {
         required this.description,
         required this.icon,
     });
-
     final int? id;
     final String? main;
     final String? description;
     final String? icon;
-
     factory Weather.fromJson(Map<String, dynamic> json){ 
         return Weather(
             id: json["id"],
@@ -186,12 +160,10 @@ class Weather {
             icon: json["icon"],
         );
     }
-
     Map<String, dynamic> toJson() => {
         "id": id,
         "main": main,
         "description": description,
         "icon": icon,
     };
-
 }
