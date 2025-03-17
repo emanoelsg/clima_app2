@@ -13,6 +13,8 @@ class WeatherService {
   Future<WeatherModel?> fetchWeather() async {
     try {
       final response = await dio.get(url);
+      // ignore: unused_local_variable
+      final data = response.data;
 
       if (response.statusCode == 200) {
         return WeatherModel.fromJson(response.data);
