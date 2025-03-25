@@ -2,28 +2,35 @@ import 'package:clima_app2/app/service/models.dart';
 import 'package:dio/dio.dart';
 
 class WeatherService {
-  final Dio dio = Dio();
-  final String key = 'cee0977430f5831b5e35250897e0dac5';
-  final String language = '&lang=pt_br';
-  final String unidMedida = '&units=metric';
-  final String city = '&q=Caratinga,BR';
-  late final String url =
-      'http://api.openweathermap.org/data/2.5/forecast?$city&appid=$key$language$unidMedida';
+  static const String _baseUrl =
+      'http://api.openweathermap.org/data/2.5/forecast';
+  static const String _apiKey = 'cee0977430f5831b5e35250897e0dac5';
 
-  Future<WeatherModel?> fetchWeather() async {
+  final Dio _dio;
+
+  WeatherService({Dio? dio}) : _dio = dio ?? Dio();
+
+  Future<WeatherModel?> fetchWeather({required String city}) async {
     try {
-      final response = await dio.get(url);
-      // ignore: unused_local_variable
-      final data = response.data;
+      final params = {
+        'q': city,
+        'appid': _apiKey,
+        'lang': 'pt_br',
+        'units': 'metric',
+      };
 
-      if (response.statusCode == 200) {
-        return WeatherModel.fromJson(response.data);
-      } else {
-        print('Erro de status code: ${response.statusCode}');
-        return null;
+      final response = await _dio.get(_baseUrl, queryParameters: params);
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load weather: ${response.statusCode}');
       }
+
+      return WeatherModel.fromJson(response.data);
+    } on DioException catch (e) {
+      print('Network error: ${e.message}');
+      return null;
     } catch (e) {
-      print('Erro na requisição: $e');
+      print('Unexpected error: $e');
       return null;
     }
   }
