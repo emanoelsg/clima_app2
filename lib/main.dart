@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(create: (_) => WeatherController(), child: MyApp()),
+    ChangeNotifierProvider(create: (context) => WeatherController(), child: MyApp()),
   );
 }
 
@@ -20,7 +20,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
       ),
