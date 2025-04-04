@@ -1,4 +1,5 @@
 import 'package:clima_app2/app/controller/api_controller.dart';
+
 import 'package:clima_app2/app/view/weather_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,35 +16,50 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: Consumer<WeatherController>(
-                builder: (context, value, child) {
-                  if (value.isLoading == true) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (value.error != null) {
-                    return Center(child: Text(value.error.toString()));
-                  }
-                  if (value.weather == null) {
-                    return Center(
-                      child: Text('Não foi possível carregar dados'),
-                    );
-                  }
-                  return WeatherDetails(weatherDetails: value.weather);
-                  }
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: Center(
+                  // Centraliza todo o conteúdo
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Consumer<WeatherController>(
+                      builder: (context, value, child) {
+                        // Widgets que não dependem do estado
+                        if (value.isLoading) {
+                          return const CircularProgressIndicator();
+                        }
+
+                        if (value.error != null) {
+                          return Text(
+                            'Erro: ${value.error}',
+                            textAlign: TextAlign.center,
+                          );
+                        }
+
+                        if (value.weather == null) {
+                          return const Text(
+                            'Nenhum dado disponível',
+                            textAlign: TextAlign.center,
+                          );
+                        }
+
+                        return WeatherDetails(weatherDetails: value.weather);
+                      },
+                    ),
+                  ),
+                ),
               ),
-            ),
-            SizedBox(height: 100),
-          ],
+            );
+          },
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.read<WeatherController>().fetchWeather(),
-        child: Icon(Icons.refresh),
+        tooltip: 'Atualizar dados',
+        child: const Icon(Icons.refresh),
       ),
     );
   }

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:clima_app2/app/service/models.dart';
 import 'package:dio/dio.dart';
 
@@ -27,10 +29,10 @@ class WeatherService {
 
       return WeatherModel.fromJson(response.data);
     } on DioException catch (e) {
-      print('Network error: ${e.message}');
+      String dioError= 'Network error: ${e.message}';
       return null;
     } catch (e) {
-      print('Unexpected error: $e');
+      String dioError=('Unexpected error: $e');
       return null;
     }
   }
