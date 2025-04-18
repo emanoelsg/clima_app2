@@ -20,8 +20,7 @@ class _MainScreenState extends State<MainScreen> {
             return Consumer<WeatherController>(
               builder: (context, value, child) {
                 // Conteúdo principal com SingleChildScrollView
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
+                return ConstrainedBox(
                     constraints: BoxConstraints(
                       minHeight: constraints.maxHeight,
                     ),
@@ -29,8 +28,8 @@ class _MainScreenState extends State<MainScreen> {
                       padding: const EdgeInsets.all(16.0),
                       child: _buildContent(value),
                     ),
-                  ),
-                );
+                  );
+                
               },
             );
           },

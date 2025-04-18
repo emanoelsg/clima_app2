@@ -37,6 +37,8 @@ class WeatherModel {
       cod: json["cod"],
     );
   }
+
+  get wind => null;
   Map<String, dynamic> toJson() => {
     "coord": coord?.toJson(),
     "weather": weather.map((x) => x.toJson()).toList(),

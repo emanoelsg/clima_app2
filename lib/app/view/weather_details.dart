@@ -59,26 +59,29 @@ class _WeatherDetailsState extends State<WeatherDetails> {
     }
 
     if (weather == null) {
-      return Center(
-        child: Text('Toque no botão de busca para começar'),
-      );
+      return Center(child: Text('Toque no botão de busca para começar'));
     }
 
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        children: [
-          // Cabeçalho com localização e temperatura
-          _buildWeatherHeader(weather),
-          SizedBox(height: 24),
-          
-          // Condição atual
-          _buildCurrentCondition(weather),
-          SizedBox(height: 24),
-          
-          // Detalhes em grid
-          _buildWeatherDetails(weather),
-        ],
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height,
+      ),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Cabeçalho com localização e temperatura
+            _buildWeatherHeader(weather),
+            SizedBox(height: 24),
+
+            // Condição atual
+            _buildCurrentCondition(weather),
+            SizedBox(height: 24),
+
+            // Detalhes em grid
+            _buildWeatherDetails(weather),
+          ],
+        ),
       ),
     );
   }
@@ -101,7 +104,7 @@ class _WeatherDetailsState extends State<WeatherDetails> {
 
   Widget _buildCurrentCondition(WeatherModel weather) {
     final condition = weather.weather.firstOrNull;
-    
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -129,29 +132,32 @@ class _WeatherDetailsState extends State<WeatherDetails> {
   }
 
   Widget _buildWeatherDetails(WeatherModel weather) {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      childAspectRatio: 1.5,
-      children: [
-        _buildDetailCard(
-          icon: Icons.water_drop,
-          title: 'Umidade',
-          value: '${weather.main?.humidity ?? '--'}%',
-        ),
-       
-        _buildDetailCard(
-          icon: Icons.thermostat,
-          title: 'Sensação',
-          value: '${weather.main?.feelsLike?.toStringAsFixed(1) ?? '--'}°C',
-        ),
-        _buildDetailCard(
-          icon: Icons.compress,
-          title: 'Pressão',
-          value: '${weather.main?.pressure ?? '--'} hPa',
-        ),
-      ],
+    return SizedBox(
+      height: 200,
+      child: GridView.count(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        crossAxisCount: 2,
+        childAspectRatio: 1.5,
+        children: [
+          _buildDetailCard(
+            icon: Icons.water_drop,
+            title: 'Umidade',
+            value: '${weather.main?.humidity ?? '--'}%',
+          ),
+
+          _buildDetailCard(
+            icon: Icons.thermostat,
+            title: 'Sensação',
+            value: '${weather.main?.feelsLike?.toStringAsFixed(1) ?? '--'}°C',
+          ),
+          _buildDetailCard(
+            icon: Icons.compress,
+            title: 'Pressão',
+            value: '${weather.main?.pressure ?? '--'} hPa',
+          ),
+        ],
+      ),
     );
   }
 
@@ -167,11 +173,14 @@ class _WeatherDetailsState extends State<WeatherDetails> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 30),
-            SizedBox(height: 8),
-            Text(title, style: TextStyle(fontSize: 14)),
+            Icon(icon, size: 20),
             SizedBox(height: 4),
-            Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(title, style: TextStyle(fontSize: 14)),
+            SizedBox(height: 2),
+            Text(
+              value,
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+            ),
           ],
         ),
       ),
@@ -180,31 +189,32 @@ class _WeatherDetailsState extends State<WeatherDetails> {
 
   void _showSearchDialog(BuildContext context) {
     final controller = TextEditingController();
-    
+
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Buscar Cidade'),
-        content: TextField(
-          controller: controller,
-          decoration: InputDecoration(hintText: 'Ex: São Paulo,BR'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancelar'),
+      builder:
+          (context) => AlertDialog(
+            title: Text('Buscar Cidade'),
+            content: TextField(
+              controller: controller,
+              decoration: InputDecoration(hintText: 'Ex: São Paulo,BR'),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.read<WeatherController>().fetchWeather(
+                    city: controller.text,
+                  );
+                  Navigator.pop(context);
+                },
+                child: Text('Buscar'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              context.read<WeatherController>().fetchWeather(city: controller.text);
-              Navigator.pop(context);
-            },
-            child: Text('Buscar'),
-          ),
-        ],
-      ),
     );
   }
 }
-
-
