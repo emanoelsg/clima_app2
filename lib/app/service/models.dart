@@ -18,7 +18,7 @@ class WeatherModel {
   final Sys? sys;
   final int? id;
   final String? name;
-  final String? cod;
+  final int? cod;
   factory WeatherModel.fromJson(Map<String, dynamic> json) {
     return WeatherModel(
       coord: json["coord"] == null ? null : Coord.fromJson(json["coord"]),

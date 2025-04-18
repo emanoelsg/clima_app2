@@ -5,7 +5,10 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(create: (context) => WeatherController(), child: MyApp()),
+    ChangeNotifierProvider(
+      create: (context) => WeatherController(),
+      child: MyApp(),
+    ),
   );
 }
 

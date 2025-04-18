@@ -3,13 +3,14 @@ import 'package:clima_app2/app/service/models.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+
 class WeatherController extends ChangeNotifier {
   final WeatherService _service;
   WeatherModel? _weather;
   bool _isLoading = false;
   String? _error;
 
-  WeatherController({WeatherService? service}) : _service = service ?? WeatherService();
+  WeatherController({WeatherService? service, }) : _service = service ?? WeatherService();
 
   WeatherModel? get weather => _weather;
   bool get isLoading => _isLoading;

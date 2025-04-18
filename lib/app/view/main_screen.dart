@@ -10,7 +10,6 @@ class MainScreen extends StatefulWidget {
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
-
 class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
@@ -18,40 +17,21 @@ class _MainScreenState extends State<MainScreen> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Center(
-                  // Centraliza todo o conteúdo
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Consumer<WeatherController>(
-                      builder: (context, value, child) {
-                        // Widgets que não dependem do estado
-                        if (value.isLoading) {
-                          return const CircularProgressIndicator();
-                        }
-
-                        if (value.error != null) {
-                          return Text(
-                            'Erro: ${value.error}',
-                            textAlign: TextAlign.center,
-                          );
-                        }
-
-                        if (value.weather == null) {
-                          return const Text(
-                            'Nenhum dado disponível',
-                            textAlign: TextAlign.center,
-                          );
-                        }
-
-                        return WeatherDetails(weatherDetails: value.weather);
-                      },
+            return Consumer<WeatherController>(
+              builder: (context, value, child) {
+                // Conteúdo principal com SingleChildScrollView
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: _buildContent(value),
                     ),
                   ),
-                ),
-              ),
+                );
+              },
             );
           },
         ),
@@ -63,4 +43,41 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
+
+  Widget _buildContent(WeatherController value) {
+    if (value.isLoading) {
+      return const SizedBox(
+        height: 200, // Altura fixa para o loading
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (value.error != null) {
+      return SizedBox(
+        height: 200, // Altura fixa para a mensagem de erro
+        child: Center(
+          child: Text(
+            'Erro: ${value.error}',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
+    if (value.weather == null) {
+      return SizedBox(
+        height: 200, // Altura fixa para o estado vazio
+        child: const Center(
+          child: Text(
+            'Nenhum dado disponível',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+
+    return WeatherDetails();
+  }
 }
+      
+    

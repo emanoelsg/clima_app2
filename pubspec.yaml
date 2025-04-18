@@ -38,6 +38,8 @@ dependencies:
   provider: ^6.1.2
 
 dev_dependencies:
+  mockito: ^5.4.2
+  build_runner: ^2.4.4
   flutter_test:
     sdk: flutter
 
