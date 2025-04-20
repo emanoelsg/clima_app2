@@ -25,6 +25,7 @@ class WeatherController extends ChangeNotifier {
 
     try {
       _weather = await _service.fetchWeather(city: city); // Passa a cidade para o serviço
+      print(_weather);
     } catch (e) {
       _error = (e is DioException) ? "Erro de conexão." : "Dados não encontrados.";
     } finally {
