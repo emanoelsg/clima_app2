@@ -1,6 +1,4 @@
 import 'package:clima_app2/app/controller/api_controller.dart';
-import 'package:clima_app2/app/service/models.dart';
-
 import 'package:clima_app2/app/view/weather_details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

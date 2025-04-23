@@ -1,5 +1,6 @@
 import 'package:clima_app2/app/service/getapi.dart';
 import 'package:clima_app2/app/service/models.dart';
+import 'package:clima_app2/app/service/weekly.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,8 @@ class WeatherController extends ChangeNotifier {
   WeatherModel? _weather;
   bool _isLoading = false;
   String? _error;
+  WeeklyForecast? _weeklyForecast;
+
 
   WeatherController({WeatherService? service, }) : _service = service ?? WeatherService();
 
@@ -33,4 +36,8 @@ class WeatherController extends ChangeNotifier {
       notifyListeners();
     }
   }
+  Future<void> fetchWeeklyForecast({String city = 'Caratinga,BR'}) async {
+  _weeklyForecast = await _service.getWeeklyForecast(city: city);
+  notifyListeners();
+}
 }

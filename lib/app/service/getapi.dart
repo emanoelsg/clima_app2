@@ -1,4 +1,5 @@
 import 'package:clima_app2/app/service/models.dart';
+import 'package:clima_app2/app/service/weekly.dart';
 import 'package:dio/dio.dart';
 
 class WeatherService {
@@ -7,6 +8,7 @@ class WeatherService {
   static const String _apiKey = 'cee0977430f5831b5e35250897e0dac5';
   
   final Dio _dio;
+
 
   WeatherService({Dio? dio}) : _dio = dio ?? Dio();
 
@@ -43,4 +45,11 @@ class WeatherService {
       return null;
     }
   }
+  // No WeatherService
+Future<WeeklyForecast> getWeeklyForecast({required String city}) async {
+  final response = await _dio.get(
+    'https://api.openweathermap.org/data/2.5/forecast?q=$city&appid=SUA_CHAVE&units=metric&lang=pt_br'
+  );
+  return WeeklyForecast.fromJson(response.data);
+}
 }

@@ -1,25 +1,4 @@
-android {
-    defaultConfig {
-        versionCode 1 // Incremente a cada atualização
-        versionName "1.0.0" // Sua versão
-    }
-    signingConfigs {
-        release {
-            storeFile file("caminho/para/sua/keystore.jks")
-            storePassword "sua-senha"
-            keyAlias "alias"
-            keyPassword "senha-do-alias"
-        }
-    }
-    buildTypes {
-        release {
-            signingConfig signingConfigs.release
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-}plugins {
+plugins {
     id("com.android.application")
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
