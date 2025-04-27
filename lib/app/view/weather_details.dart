@@ -17,40 +17,24 @@ class _WeatherDetailsState extends State<WeatherDetails> {
     final condition = widget.weatherData.weather.firstOrNull;
     final main = widget.weatherData.main;
     final sys = widget.weatherData.sys;
+  
+  final city = 'Carating';
+  final country = 'BR';
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _buildHeaderCard(main, widget.weatherData.name, sys?.country),
-          const SizedBox(height: 20),
-          _buildConditionCard(condition, main?.feelsLike),
-
-          const SizedBox(height: 20),
-
-          _buildDetailsGrid(main, widget.weatherData.wind, widget.weatherData.clouds),
-
-          const SizedBox(height: 20),
-          _buildSunCard(sys),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeaderCard(Main? main, String? city, String? country) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Text(
-              city ?? '--',
+          //_buildHeaderCard(main, widget.weatherData.name, sys?.country),
+          Container(
+            child: Column(children: [
+              Text(
+              city,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            if (country != null) Text(country),
+            Text(country),
             const SizedBox(height: 8),
             Text(
               '${main?.temp?.toStringAsFixed(1)}°C',
@@ -60,11 +44,54 @@ class _WeatherDetailsState extends State<WeatherDetails> {
               'Mín: ${main?.tempMin?.toStringAsFixed(1)}°C / Máx: ${main?.tempMax?.toStringAsFixed(1)}°C',
               style: const TextStyle(fontSize: 14),
             ),
-          ],
-        ),
+
+            ],),
+          ),
+          const SizedBox(height: 20),
+          _buildConditionCard(condition, main?.feelsLike),
+
+          const SizedBox(height: 20),
+
+          _buildDetailsGrid(
+            main,
+            widget.weatherData.wind,
+            widget.weatherData.clouds,
+          ),
+
+          const SizedBox(height: 20),
+          _buildSunCard(sys),
+        ],
       ),
     );
   }
+
+  // Widget _buildHeaderCard(Main? main, String? city, String? country) {
+  //   return Card(
+  //     elevation: 2,
+  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(16),
+  //       child: Column(
+  //         children: [
+  //           Text(
+  //             city ?? '--',
+  //             style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+  //           ),
+  //           if (country != null) Text(country),
+  //           const SizedBox(height: 8),
+  //           Text(
+  //             '${main?.temp?.toStringAsFixed(1)}°C',
+  //             style: const TextStyle(fontSize: 48, fontWeight: FontWeight.w300),
+  //           ),
+  //           Text(
+  //             'Mín: ${main?.tempMin?.toStringAsFixed(1)}°C / Máx: ${main?.tempMax?.toStringAsFixed(1)}°C',
+  //             style: const TextStyle(fontSize: 14),
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildConditionCard(Weather? condition, double? feelsLike) {
     return Card(
@@ -116,7 +143,7 @@ class _WeatherDetailsState extends State<WeatherDetails> {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: 2,
-    
+
       children: [
         _buildDetailItem(
           'Umidade',
@@ -130,6 +157,7 @@ class _WeatherDetailsState extends State<WeatherDetails> {
           Icons.compress,
           Colors.deepPurple,
         ),
+
         _buildDetailItem('Vento', '${wind?.speed} m/s', Icons.air, Colors.teal),
         _buildDetailItem('Nuvens', '${clouds?.all}%', Icons.cloud, Colors.grey),
       ],

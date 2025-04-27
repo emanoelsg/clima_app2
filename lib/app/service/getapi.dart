@@ -8,8 +8,7 @@ class WeatherService {
   static const String _apiKey = 'cee0977430f5831b5e35250897e0dac5';
   
   final Dio _dio;
-
-
+  
   WeatherService({Dio? dio}) : _dio = dio ?? Dio();
 
   /// Busca dados meteorológicos para uma cidade específica
@@ -38,10 +37,9 @@ class WeatherService {
 
       return WeatherModel.fromJson(response.data);
     } on DioException catch (e) {
-      print('[WeatherService] Erro de rede: ${e.message}');
+      
       return null;
     } catch (e) {
-      print('[WeatherService] Erro inesperado: $e');
       return null;
     }
   }

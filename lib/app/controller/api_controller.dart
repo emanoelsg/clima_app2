@@ -12,12 +12,12 @@ class WeatherController extends ChangeNotifier {
   String? _error;
   WeeklyForecast? _weeklyForecast;
 
-
   WeatherController({WeatherService? service, }) : _service = service ?? WeatherService();
 
   WeatherModel? get weather => _weather;
   bool get isLoading => _isLoading;
   String? get error => _error;
+  WeeklyForecast? get weeklyForecast => _weeklyForecast; 
 
   Future<void> fetchWeather({String city = 'Caratinga,BR'}) async {
     if (_isLoading) return;
