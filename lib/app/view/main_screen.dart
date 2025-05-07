@@ -4,18 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
-  
-  const MainScreen({super.key,});
+  const MainScreen({super.key});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
-class _MainScreenState extends State<MainScreen> {
 
+class _MainScreenState extends State<MainScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      context.read<WeatherController>().fetchWeather();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 197, 211, 234),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
@@ -23,24 +30,13 @@ class _MainScreenState extends State<MainScreen> {
               builder: (context, value, child) {
                 // Conteúdo principal com SingleChildScrollView
                 return ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: _buildContent(value),
-                    ),
-                  );
-                
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: _buildContent(value),
+                );
               },
             );
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<WeatherController>().fetchWeather(),
-        tooltip: 'Atualizar dados',
-        child: const Icon(Icons.refresh),
       ),
     );
   }
@@ -57,10 +53,7 @@ class _MainScreenState extends State<MainScreen> {
       return SizedBox(
         height: 200, // Altura fixa para a mensagem de erro
         child: Center(
-          child: Text(
-            'Erro: ${value.error}',
-            textAlign: TextAlign.center,
-          ),
+          child: Text('Erro: ${value.error}', textAlign: TextAlign.center),
         ),
       );
     }
@@ -69,16 +62,11 @@ class _MainScreenState extends State<MainScreen> {
       return SizedBox(
         height: 200, // Altura fixa para o estado vazio
         child: const Center(
-          child: Text(
-            'Nenhum dado disponível',
-            textAlign: TextAlign.center,
-          ),
+          child: Text('Nenhum dado disponível', textAlign: TextAlign.center),
         ),
       );
     }
 
-    return WeatherDetails(weatherData:value.weather! );
+    return WeatherDetails(weatherData: value.weather!);
   }
 }
-      
-    

@@ -54,7 +54,7 @@ class DailyForecastCard extends StatelessWidget {
           ),
           Text('${forecast.maxTemp.round()}°'),
           Text(
-            '${forecast.precipitation > 0 ? '${(forecast.precipitation * 100).round()}%' : '0%'}',
+            forecast.precipitation > 0 ? '${(forecast.precipitation * 100).round()}%' : '0%',
             style: TextStyle(
               color: forecast.precipitation > 0.3 
                  ? Colors.red 

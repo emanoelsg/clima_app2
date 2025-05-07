@@ -36,6 +36,7 @@ class WeatherService {
       }
 
       return WeatherModel.fromJson(response.data);
+    // ignore: unused_catch_clause
     } on DioException catch (e) {
       
       return null;
