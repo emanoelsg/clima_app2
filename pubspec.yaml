@@ -11,11 +11,21 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_dotenv: ^5.1.0
+  
   cupertino_icons: ^1.0.8
   dio: ^5.8.0+1
   provider: ^6.1.2
   intl: ^0.20.2
+  get: ^4.7.2
+  flutter_native_splash: ^2.4.6
+
+flutter_native_splash:
+  color: "#121212"
+  image: "assets/splash_logo/AirgetStudio_logo/AirgetStudio_Logo.png"
+  android: true
+  ios: true
+  android_gravity: center
 
 dev_dependencies:
   mockito: ^5.4.2
@@ -31,4 +41,5 @@ flutter:
     - assets/images/clouds_bg.jpg
     - assets/images/snow_bg.jpg
     - assets/images/sunny_bg.jpg
+    - assets/splash_logo/AirgetStudio_logo/AirgetStudio_Logo.png
   uses-material-design: true
