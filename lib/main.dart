@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
-  if (kDebugMode) {
+  if (kDebugMode) {//TODO  remover
     print(dotenv.env['OPENWEATHER_API_KEY']);
   }
   runApp(const MyApp());
