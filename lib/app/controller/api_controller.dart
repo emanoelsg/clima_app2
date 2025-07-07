@@ -35,13 +35,13 @@ class WeatherController extends GetxController {
     }
   }
 
-  @override
-    void onInit() {
-    super.onInit();
+@override
+void onInit() {
+  super.onInit();
+  if (!_initialized) {
     fetchWeather();
-    if (!_initialized) {
-      fetchWeather();
-      _initialized = true;
-    }
+    _initialized = true;
   }
+}
+
 }
