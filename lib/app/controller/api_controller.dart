@@ -13,14 +13,7 @@ class WeatherController extends GetxController {
   var isLoading = false.obs;
   var errorMessage = ''.obs;
 
-/*************  ✨ Windsurf Command ⭐  *************/
-  /// Fetches the current weather for the user's location.
-  ///
-  /// This will also set [isLoading] to true while the request is being made and
-  /// then set it back to false when the request is complete.
-  ///
-  /// If the request fails, [errorMessage] will be set to a non-empty string.
-/*******  84474e0c-8d67-4889-9958-f2129800ee79  *******/
+
   Future<void> fetchWeather() async {
     isLoading.value = true;
     errorMessage.value = '';

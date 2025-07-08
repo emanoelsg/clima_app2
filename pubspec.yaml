@@ -14,17 +14,21 @@ dependencies:
   flutter_dotenv: ^5.1.0
   cupertino_icons: ^1.0.8
   dio: ^5.8.0+1
-  provider: ^6.1.2
   intl: ^0.20.2
   get: ^4.7.2
   flutter_native_splash: ^2.4.6
   geolocator: ^14.0.2
   geocoding: ^4.0.0
+  google_fonts: ^6.2.1
+  flutter_svg: ^2.2.0
+  flutter_animate: ^4.5.2
+  weather_icons: ^3.0.0
+  flutter_spinkit: ^5.2.1
 
 
 flutter_native_splash:
   color: "#121212"
-  image: "assets/splash_logo/AirgetStudio_logo/AirgetStudio_Logo.png"
+  image: "assets/splash_logo/AirgetStudio_logo/airget_studio_logo.png"
   android: true
   ios: true
   android_gravity: center
@@ -39,9 +43,6 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/images/rain_bg.jpg
-    - assets/images/clouds_bg.jpg
-    - assets/images/snow_bg.jpg
-    - assets/images/sunny_bg.jpg
-    - assets/splash_logo/AirgetStudio_logo/AirgetStudio_Logo.png
+    - assets/images/
+    - assets/splash_logo/
   uses-material-design: true
