@@ -1,11 +1,14 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:dio/dio.dart';
-import 'package:clima_app2/app/service/weather_service.dart';
 import 'package:clima_app2/app/models/weather_model/weather_model.dart';
-import 'weather_service_test.mocks.dart';
+import 'package:clima_app2/app/models/weather_model/weather_model_extension.dart';
+
 import 'package:clima_app2/app/models/weekly_model/weekly_forecast_model.dart';
+import 'package:clima_app2/app/service/weather_service.dart';
+import 'weather_service_test.mocks.dart';
+
 
   @GenerateMocks([Dio])
 void main() {
@@ -55,7 +58,8 @@ void main() {
   final result = await service.fetchWeather(city: 'Rio de Janeiro,BR');
 
   expect(result, isA<WeatherModel>());
-  expect(result?.name, 'Rio de Janeiro');
+  expect(result?.city, 'Rio de Janeiro');
+
 });
 
    test('getWeeklyForecast retorna dados com cidade válida', () async {
@@ -121,5 +125,6 @@ void main() {
       expect(result, isNull);
     });
   });
+
+ 
 }
-//expect(result.daily.isNotEmpty, true);

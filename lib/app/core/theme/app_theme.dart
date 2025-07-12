@@ -4,7 +4,13 @@ import 'package:clima_app2/app/core/theme/colors/app_colors.dart';
 import 'package:clima_app2/app/core/theme/texts/text_theme.dart';
 
 class AppTheme {
-  static ThemeData get darkTheme => ThemeData(
+
+  static final ThemeData test = ThemeData(
+    brightness: Brightness.dark,
+    textTheme: const TextTheme(), // sem GoogleFonts
+  );
+
+  static ThemeData dark = ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: AppColors.backgroundTop,
         primaryColor: AppColors.iconColor,
@@ -49,5 +55,5 @@ class AppTheme {
           ),
           hintStyle: TextStyle(color: AppColors.textFaded),
         ),
-      );
+      ) ;
 }

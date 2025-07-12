@@ -14,14 +14,15 @@ Future<String?> getCurrentCity() async {
   if (permission == LocationPermission.deniedForever) return null;
 
   final position = await Geolocator.getCurrentPosition(
-    desiredAccuracy: LocationAccuracy.high,
+    locationSettings: const LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 10,
+    ),
   );
 
-  final placemarks = await placemarkFromCoordinates(
-    position.latitude,
-    position.longitude,
-  );
-
+  // Obter cidade a partir das coordenadas
+  final placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
   final place = placemarks.first;
+
   return '${place.locality},${place.isoCountryCode}';
 }

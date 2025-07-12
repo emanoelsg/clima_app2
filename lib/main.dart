@@ -1,13 +1,14 @@
-import 'package:flutter/foundation.dart';
+import 'package:clima_app2/app/core/theme/app_theme.dart';
+import 'package:clima_app2/app/view/home_page/home_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
 Future<void> main() async {
-  await dotenv.load(fileName: ".env");
-  if (kDebugMode) {//TODO  remover
-    print(dotenv.env['OPENWEATHER_API_KEY']);
-  }
+  WidgetsFlutterBinding.ensureInitialized();
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    print('⚠️ Flutter Error: ${details.exception}');
+  };
   runApp(const MyApp());
 }
 
@@ -19,6 +20,8 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,
+      theme: AppTheme.dark,
+      home: HomeScreen(),
     );
   }
 }
