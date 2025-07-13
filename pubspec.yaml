@@ -30,10 +30,12 @@ dependencies:
 
 flutter_native_splash:
   color: "#121212"
-  image: "assets/splash_logo/AirgetStudio_logo/airget_studio_logo.png"
+  image: "assets/splash_logo/airget_studio_logo.png"
   android: true
   ios: true
   android_gravity: center
+  fullscreen: true
+
 
 dev_dependencies:
   integration_test:

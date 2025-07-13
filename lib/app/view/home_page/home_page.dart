@@ -15,7 +15,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   final controller = Get.put(WeatherController());
+  final TextEditingController _cityController = TextEditingController();
+
+  @override
+  void dispose() {
+  _cityController.dispose();
+  super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +74,38 @@ class _HomeScreenState extends State<HomeScreen> {
                 return ListView(
                   padding: const EdgeInsets.symmetric(vertical: 24),
                   children: [
+                    //busca manual
+                    Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 24),
+  child: Row(
+    children: [
+      Expanded(
+        child: TextField(
+          controller: _cityController,
+          decoration: const InputDecoration(
+            hintText: 'Digite uma cidade',
+            hintStyle: TextStyle(color: Colors.white70),
+            filled: true,
+            fillColor: Colors.white24,
+            border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+          ),
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
+      const SizedBox(width: 8),
+      IconButton(
+        icon: const Icon(Icons.search, color: Colors.white),
+        onPressed: () {
+          final city = _cityController.text.trim();
+          if (city.isNotEmpty) {
+            controller.fetchWeatherByCity(city);
+          }
+        },
+      ),
+    ],
+  ),
+),
+
                     // Top bar
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),

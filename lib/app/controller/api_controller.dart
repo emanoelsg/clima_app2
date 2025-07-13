@@ -25,6 +25,28 @@ class WeatherController extends GetxController {
     super.onInit();
     _loadAll();
   }
+  Future<void> fetchWeatherByCity(String city) async {
+  isLoading.value = true;
+  errorMessage.value = '';
+
+  try {
+    final result = await weatherService.fetchWeather(city: city);
+    if (result == null) {
+      errorMessage.value = 'Cidade não encontrada ou erro na API.';
+    } else {
+      weather.value = result;
+      _currentCity = city;
+      await Future.wait([
+        fetchHourlyForecast(),
+        fetchWeeklyForecast(),
+      ]);
+    }
+  } catch (e) {
+    errorMessage.value = 'Erro ao buscar clima: $e';
+  } finally {
+    isLoading.value = false;
+  }
+}
 
   Future<void> _loadAll() async {
     isLoading.value = true;
@@ -33,7 +55,7 @@ class WeatherController extends GetxController {
     try {
       _currentCity = await getCurrentCity();
       if (_currentCity == null) {
-        errorMessage.value = 'Não foi possível obter a localização.';
+        errorMessage.value = 'Por favor ligue a localização ';
         return;
       }
 
