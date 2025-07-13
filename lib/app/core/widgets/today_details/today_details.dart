@@ -10,7 +10,7 @@ class TodayForecastList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textStyle = Theme.of(context).textTheme.labelSmall;
+    final textStyle = Theme.of(context).textTheme.bodyMedium;
     final controller = Get.find<WeatherController>();
 
     return Column(
@@ -35,7 +35,7 @@ class TodayForecastList extends StatelessWidget {
                 margin: const EdgeInsets.symmetric(horizontal: 8),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white10,
+                  color: Colors.black54,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(

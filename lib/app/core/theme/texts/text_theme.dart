@@ -30,7 +30,7 @@ class AppTextTheme {
           color: AppColors.textPrimary,
         ),
         bodyMedium: const TextStyle(
-          fontSize: 14,
+          fontSize: 12,
           fontWeight: FontWeight.w300,
           color: AppColors.textSecondary,
         ),

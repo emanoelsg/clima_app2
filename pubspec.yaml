@@ -1,7 +1,7 @@
 name: clima_app2
 description: "A new Flutter project."
 
-publish_to: "none"
+publish_to: "none"  # https://icons8.com.br/ antes de postar coloca esse link
 
 version: 1.0.0+1
 
@@ -48,6 +48,5 @@ dev_dependencies:
 
 flutter:
   assets:
-    - assets/images/
     - assets/splash_logo/
   uses-material-design: true

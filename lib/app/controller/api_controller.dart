@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weather_icons/weather_icons.dart';
-
 import 'package:clima_app2/app/service/weather_service.dart';
 import 'package:clima_app2/app/models/weather_model/weather_model.dart';
 import 'package:clima_app2/app/models/weekly_model/weekly_forecast_model.dart';
 import 'package:clima_app2/app/models/hourly_model/hourly_model.dart';
 import 'package:clima_app2/app/models/daily_forecast/daily_forecast.dart';
 import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.dart';
-
 class WeatherController extends GetxController {
   final WeatherService weatherService = WeatherService();
 
@@ -53,7 +51,7 @@ class WeatherController extends GetxController {
 
   Future<void> fetchWeather() async {
     try {
-      print('🌤️ Buscando clima atual para $_currentCity');
+  
       final result = await weatherService.fetchWeather(city: _currentCity!);
       if (result == null) {
         errorMessage.value = 'Não foi possível obter os dados do clima.';
@@ -69,8 +67,6 @@ class WeatherController extends GetxController {
     try {
       final city = weather.value?.name ?? _currentCity;
       if (city == null) throw Exception('Cidade nula');
-
-      print('⏰ Buscando previsão por hora para $city');
       final list = await weatherService.getHourlyForecast(city: city);
       hourlyForecast.value = list;
     } catch (e) {
@@ -82,8 +78,6 @@ class WeatherController extends GetxController {
     try {
       final city = weather.value?.name ?? _currentCity;
       if (city == null) throw Exception('Cidade nula');
-
-      print('📅 Buscando previsão semanal para $city');
       final wf = await weatherService.getWeeklyForecast(city: city);
       weeklyForecast.value = wf;
       dailyForecast.value = wf.daily;

@@ -5,7 +5,6 @@ Future<String?> getCurrentCity() async {
   try {
     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      print('❌ Serviço de localização desativado');
       return null;
     }
 
@@ -13,13 +12,11 @@ Future<String?> getCurrentCity() async {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        print('❌ Permissão de localização negada');
         return null;
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      print('❌ Permissão negada permanentemente');
       return null;
     }
 
@@ -30,12 +27,11 @@ Future<String?> getCurrentCity() async {
       ),
     );
 
-    print('📍 Coordenadas: ${position.latitude}, ${position.longitude}');
+
 
     final placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
     final place = placemarks.first;
 
-    print('🧾 Placemark: ${place.toString()}');
 
     // Fallback inteligente para cidade
     final cityCandidate = [
@@ -49,16 +45,14 @@ Future<String?> getCurrentCity() async {
     );
 
     if (cityCandidate!.isEmpty || place.isoCountryCode == null) {
-      print('❌ Cidade inválida ou país ausente');
       return null;
     }
 
     final city = '$cityCandidate,${place.isoCountryCode}';
-    print('🏙️ Cidade detectada: $city');
+
 
     return city;
   } catch (e) {
-    print('❌ Erro ao obter cidade: $e');
     return null;
   }
 }

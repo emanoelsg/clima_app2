@@ -27,7 +27,6 @@ class WeatherService {
   /// 🌤️ Clima atual
   Future<WeatherModel?> fetchWeather({required String city}) async {
     try {
-      print('🔄 Buscando clima atual para: $city');
       final response = await _dio.get(
         _baseUrl,
         queryParameters: _buildQuery(city),
@@ -35,13 +34,11 @@ class WeatherService {
       );
 
       if (response.statusCode != 200) {
-        print('❌ Erro API: ${response.statusCode}');
         return null;
       }
 
       return WeatherModel.fromJson(response.data);
-    } on DioException catch (e) {
-      print('❌ Erro ao buscar clima atual: ${e.message}');
+    } on DioException {
       return null;
     }
   }
@@ -49,7 +46,6 @@ class WeatherService {
   /// 📅 Previsão semanal (agrupada por dia)
   Future<WeeklyForecast> getWeeklyForecast({required String city}) async {
     try {
-      print('📅 Buscando previsão semanal para: $city');
       final response = await _dio.get(
         _forecastUrl,
         queryParameters: _buildQuery(city),
@@ -57,13 +53,11 @@ class WeatherService {
       );
 
       if (response.statusCode != 200) {
-        print('❌ Erro API: ${response.statusCode}');
         return WeeklyForecast(daily: []);
       }
 
       return WeeklyForecast.fromJson(response.data);
-    } on DioException catch (e) {
-      print('❌ Erro ao buscar previsão semanal: ${e.message}');
+    } on DioException {
       return WeeklyForecast(daily: []);
     }
   }
@@ -71,7 +65,6 @@ class WeatherService {
   /// ⏰ Previsão por hora (próximas 8 horas)
   Future<List<HourlyForecast>> getHourlyForecast({required String city}) async {
     try {
-      print('⏰ Buscando previsão por hora para: $city');
       final response = await _dio.get(
         _forecastUrl,
         queryParameters: _buildQuery(city),
@@ -95,7 +88,6 @@ class WeatherService {
         );
       }).toList();
     } catch (e) {
-      print('❌ Erro ao buscar previsão por hora: $e');
       throw Exception('Erro ao buscar previsão por hora: $e');
     }
   }

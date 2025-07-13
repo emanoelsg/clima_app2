@@ -14,22 +14,24 @@ class ForecastList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<WeatherController>();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: forecast.map((day) {
-        final icon = controller.getWeatherIcon(day.icon);
-        final dayLabel = DateFormat('EEE', 'pt_BR').format(day.date);
-
-        return ListTile(
-          leading: Icon(icon, color: Colors.white),
-          title: Text(dayLabel, style: const TextStyle(color: Colors.white)),
-          trailing: Text(
-            '${day.minTemp.round()}° / ${day.maxTemp.round()}°',
-            style: const TextStyle(color: Colors.white),
-          ),
-        );
-      }).toList(),
+      children:
+          forecast.map((day) {
+            final icon = controller.getWeatherIcon(day.icon);
+            final dayLabel = DateFormat('EEE', 'pt_BR').format(day.date);
+            return ListTile(
+              leading: Icon(icon, color: Colors.white),
+              title: Text(
+                dayLabel,
+                style: const TextStyle(color: Colors.white),
+              ),
+              trailing: Text(
+                ' Min ${day.minTemp.round()}° / Max ${day.maxTemp.round()}°',
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          }).toList(),
     );
   }
 }
