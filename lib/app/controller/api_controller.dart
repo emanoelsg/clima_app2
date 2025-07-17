@@ -1,3 +1,4 @@
+import 'package:clima_app2/app/core/utils/helpers/get_background/background_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:weather_icons/weather_icons.dart';
@@ -7,13 +8,16 @@ import 'package:clima_app2/app/models/weekly_model/weekly_forecast_model.dart';
 import 'package:clima_app2/app/models/hourly_model/hourly_model.dart';
 import 'package:clima_app2/app/models/daily_forecast/daily_forecast.dart';
 import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.dart';
- class WeatherController extends GetxController {
+
+class WeatherController extends GetxController {
   final WeatherService weatherService = WeatherService();
 
   final weather = Rxn<WeatherModel>();
   final weeklyForecast = Rxn<WeeklyForecast>();
   final hourlyForecast = <HourlyForecast>[].obs;
   final dailyForecast = <DailyForecast>[].obs;
+  String get condition => weather.value?.weather.first.main ?? 'Clear';
+  final backgroundGradient = <Color>[].obs;
 
   final isLoading = false.obs;
   final errorMessage = ''.obs;
@@ -24,7 +28,14 @@ import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.
   void onInit() {
     super.onInit();
     debugPrint('[WeatherController] onInit chamado');
-    _loadAll();
+    loadAll();
+  }
+
+  void updateBackgroundGradient() {
+    final condition = weather.value?.weather.first.main ?? 'Clear';
+    final gradient = WeatherBackground.getGradient(condition);
+    backgroundGradient.value = gradient;
+    debugPrint('[WeatherController] Gradiente atualizado para $condition');
   }
 
   Future<void> fetchWeatherByCity(String city) async {
@@ -40,12 +51,12 @@ import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.
       } else {
         weather.value = result;
         _currentCity = city;
-        debugPrint('[WeatherController] Clima atual recebido: ${result.main?.temp}°C');
-        await Future.wait([
-          fetchHourlyForecast(),
-          fetchWeeklyForecast(),
-        ]);
+        debugPrint(
+          '[WeatherController] Clima atual recebido: ${result.main?.temp}°C',
+        );
+        await Future.wait([fetchHourlyForecast(), fetchWeeklyForecast()]);
       }
+      updateBackgroundGradient();
     } catch (e) {
       errorMessage.value = 'Erro ao buscar clima: $e';
       debugPrint('[WeatherController] Erro ao buscar clima: $e');
@@ -54,7 +65,7 @@ import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.
     }
   }
 
-  Future<void> _loadAll() async {
+  Future<void> loadAll() async {
     debugPrint('[WeatherController] Iniciando _loadAll');
     isLoading.value = true;
     errorMessage.value = '';
@@ -70,10 +81,7 @@ import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.
       }
 
       await fetchWeather();
-      await Future.wait([
-        fetchHourlyForecast(),
-        fetchWeeklyForecast(),
-      ]);
+      await Future.wait([fetchHourlyForecast(), fetchWeeklyForecast()]);
     } catch (e) {
       errorMessage.value = 'Erro ao carregar dados: $e';
       debugPrint('[WeatherController] Erro ao carregar dados: $e');
@@ -91,8 +99,10 @@ import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.
         debugPrint('[WeatherController] Clima atual não encontrado');
       } else {
         weather.value = result;
-        debugPrint('[WeatherController] Clima atual recebido: ${result.main?.temp}°C');
-      }
+        debugPrint(
+          '[WeatherController] Clima atual recebido: ${result.main?.temp}°C',
+        );
+      }updateBackgroundGradient();
     } catch (e) {
       errorMessage.value = 'Erro ao buscar clima atual: $e';
       debugPrint('[WeatherController] Erro ao buscar clima atual: $e');
@@ -103,14 +113,18 @@ import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.
     try {
       final city = weather.value?.name ?? _currentCity;
       if (city == null) {
-        debugPrint('[WeatherController] Cidade nula ao buscar previsão por hora');
+        debugPrint(
+          '[WeatherController] Cidade nula ao buscar previsão por hora',
+        );
         throw Exception('Cidade nula');
       }
 
       debugPrint('[WeatherController] Buscando previsão por hora para $city');
       final list = await weatherService.getHourlyForecast(city: city);
       hourlyForecast.value = list;
-      debugPrint('[WeatherController] Previsão por hora recebida: ${list.length} itens');
+      debugPrint(
+        '[WeatherController] Previsão por hora recebida: ${list.length} itens',
+      );
     } catch (e) {
       errorMessage.value = 'Erro ao buscar previsão por hora: $e';
       debugPrint('[WeatherController] Erro ao buscar previsão por hora: $e');
@@ -121,7 +135,9 @@ import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.
     try {
       final city = weather.value?.name ?? _currentCity;
       if (city == null) {
-        debugPrint('[WeatherController] Cidade nula ao buscar previsão semanal');
+        debugPrint(
+          '[WeatherController] Cidade nula ao buscar previsão semanal',
+        );
         throw Exception('Cidade nula');
       }
 
@@ -129,7 +145,9 @@ import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.
       final wf = await weatherService.getWeeklyForecast(city: city);
       weeklyForecast.value = wf;
       dailyForecast.value = wf.daily;
-      debugPrint('[WeatherController] Previsão semanal recebida: ${wf.daily.length} dias');
+      debugPrint(
+        '[WeatherController] Previsão semanal recebida: ${wf.daily.length} dias',
+      );
     } catch (e) {
       errorMessage.value = 'Erro ao buscar previsão semanal: $e';
       debugPrint('[WeatherController] Erro ao buscar previsão semanal: $e');
@@ -138,26 +156,38 @@ import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.
 
   IconData getWeatherIcon(String code) {
     switch (code) {
-      case '01d': return WeatherIcons.day_sunny;
-      case '01n': return WeatherIcons.night_clear;
-      case '02d': return WeatherIcons.day_cloudy;
-      case '02n': return WeatherIcons.night_alt_cloudy;
+      case '01d':
+        return WeatherIcons.day_sunny;
+      case '01n':
+        return WeatherIcons.night_clear;
+      case '02d':
+        return WeatherIcons.day_cloudy;
+      case '02n':
+        return WeatherIcons.night_alt_cloudy;
       case '03d':
-      case '03n': return WeatherIcons.cloud;
+      case '03n':
+        return WeatherIcons.cloud;
       case '04d':
-      case '04n': return WeatherIcons.cloudy;
+      case '04n':
+        return WeatherIcons.cloudy;
       case '09d':
-      case '09n': return WeatherIcons.showers;
-      case '10d': return WeatherIcons.day_rain;
-      case '10n': return WeatherIcons.night_alt_rain;
+      case '09n':
+        return WeatherIcons.showers;
+      case '10d':
+        return WeatherIcons.day_rain;
+      case '10n':
+        return WeatherIcons.night_alt_rain;
       case '11d':
-      case '11n': return WeatherIcons.thunderstorm;
+      case '11n':
+        return WeatherIcons.thunderstorm;
       case '13d':
-      case '13n': return WeatherIcons.snow;
+      case '13n':
+        return WeatherIcons.snow;
       case '50d':
-      case '50n': return WeatherIcons.fog;
-      default: return WeatherIcons.na;
+      case '50n':
+        return WeatherIcons.fog;
+      default:
+        return WeatherIcons.na;
     }
   }
 }
-  

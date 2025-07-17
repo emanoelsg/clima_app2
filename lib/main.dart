@@ -1,15 +1,17 @@
 import 'package:clima_app2/app/core/theme/app_theme.dart';
 import 'package:clima_app2/app/view/home_page/home_page.dart';
+import 'package:clima_app2/app/view/load_screen/loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:clima_app2/app/view/search_screen/search_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
   };
-    await initializeDateFormatting( 'pt_BR' , null);
+  await initializeDateFormatting('pt_BR', null);
 
   runApp(const MyApp());
 }
@@ -23,7 +25,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.system,
       theme: AppTheme.dark,
-      home: HomeScreen(),
+      routes: {
+        '/home': (context) => const HomeScreen(),
+        '/search': (context) => SearchScreen(),
+        '/': (context) => LoadingScreen(),
+      },
     );
   }
 }

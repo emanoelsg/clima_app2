@@ -3,6 +3,7 @@ import 'package:clima_app2/app/models/weather_model/weather_model.dart';
 import 'package:clima_app2/app/models/hourly_model/hourly_model.dart';
 import 'package:clima_app2/app/models/weekly_model/weekly_forecast_model.dart';
 import 'package:clima_app2/app/core/config/api_keys/api_keys.dart';
+import 'package:flutter/foundation.dart';
 
 class WeatherService {
   static const String _baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
@@ -89,7 +90,9 @@ class WeatherService {
       );
     }).toList();
   } catch (e) {
-    print('Erro ao buscar previsão por hora: $e');
+    if (kDebugMode) {
+      print('Erro ao buscar previsão por hora: $e');
+    }
     return []; // ← evita crash e mostra fallback
   }
 }

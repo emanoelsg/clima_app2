@@ -1,3 +1,4 @@
+import 'package:clima_app2/app/view/search_screen/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:clima_app2/app/controller/api_controller.dart';
@@ -31,20 +32,15 @@ class _HomeScreenState extends State<HomeScreen> {
       final isLoading = controller.isLoading.value;
       final hasError = controller.errorMessage.isNotEmpty;
 
-      final condition = weather?.main ?? 'clear';
-      final gradient = WeatherBackground.getGradient(
-        condition.toString().toLowerCase(),
-      );
 
       return Scaffold(
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: gradient,
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+              colors: WeatherBackground.getGradient(controller.condition),
             ),
           ),
+
           child: SafeArea(
             child: Builder(
               builder: (_) {
@@ -69,47 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: TextStyle(color: Colors.white),
                     ),
                   );
-                }//Google
+                } //Google
 
                 return ListView(
                   padding: const EdgeInsets.symmetric(vertical: 24),
                   children: [
-                    //busca manual
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 24),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _cityController,
-                              decoration: const InputDecoration(
-                                hintText: 'Digite uma cidade',
-                                hintStyle: TextStyle(color: Colors.white70),
-                                filled: true,
-                                fillColor: Colors.white24,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(8),
-                                  ),
-                                ),
-                              ),
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          IconButton(
-                            icon: const Icon(Icons.search, color: Colors.white),
-                            onPressed: () {
-                              final city = _cityController.text.trim();
-                              if (city.isNotEmpty) {
-                                controller.fetchWeatherByCity(city);
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-
                     // Top bar
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -117,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextButton.icon(
-                            onPressed: () {},
+                            onPressed: () => Get.to(() => SearchScreen()),
                             icon: const Icon(
                               Icons.location_on,
                               color: Colors.white,
