@@ -10,6 +10,7 @@ import 'package:clima_app2/app/service/weather_service.dart';
 import 'weather_service_test.mocks.dart';
 
 
+
   @GenerateMocks([Dio])
 void main() {
   group('WeatherService', () {
@@ -61,6 +62,43 @@ void main() {
   expect(result?.city, 'Rio de Janeiro');
 
 });
+group('WeatherService - getHourlyForecast', () {
+    late MockDio mockDio;
+    late WeatherService service;
+
+    setUp(() {
+      mockDio = MockDio();
+      service = WeatherService(dio: mockDio);
+    });
+
+    test('retorna lista de HourlyForecast quando a resposta é válida', () async {
+      final mockResponse = {
+        "list": List.generate(8, (i) {
+          return {
+            "dt_txt": "2025-07-15 0$i:00:00",
+            "main": {"temp": 20 + i},
+            "weather": [
+              {"icon": "01d"}
+            ]
+          };
+        })
+      };
+
+      when(mockDio.get(any, queryParameters: anyNamed('queryParameters'), options: anyNamed('options')))
+          .thenAnswer((_) async => Response(
+                data: mockResponse,
+                statusCode: 200,
+                requestOptions: RequestOptions(path: ''),
+              ));
+
+      final result = await service.getHourlyForecast(city: 'Caratinga');
+
+      expect(result.length, 8);
+      expect(result.first.temp, 20);
+      expect(result.first.iconCode, '01d');
+      expect(result.first.time, '00:00');
+    });
+  });
 
    test('getWeeklyForecast retorna dados com cidade válida', () async {
   final mockResponse = Response(

@@ -7,7 +7,7 @@ import 'package:clima_app2/app/models/weekly_model/weekly_forecast_model.dart';
 import 'package:clima_app2/app/models/hourly_model/hourly_model.dart';
 import 'package:clima_app2/app/models/daily_forecast/daily_forecast.dart';
 import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.dart';
-class WeatherController extends GetxController {
+ class WeatherController extends GetxController {
   final WeatherService weatherService = WeatherService();
 
   final weather = Rxn<WeatherModel>();
@@ -23,39 +23,49 @@ class WeatherController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    debugPrint('[WeatherController] onInit chamado');
     _loadAll();
   }
-  Future<void> fetchWeatherByCity(String city) async {
-  isLoading.value = true;
-  errorMessage.value = '';
 
-  try {
-    final result = await weatherService.fetchWeather(city: city);
-    if (result == null) {
-      errorMessage.value = 'Cidade não encontrada ou erro na API.';
-    } else {
-      weather.value = result;
-      _currentCity = city;
-      await Future.wait([
-        fetchHourlyForecast(),
-        fetchWeeklyForecast(),
-      ]);
+  Future<void> fetchWeatherByCity(String city) async {
+    debugPrint('[WeatherController] Buscando clima para cidade: $city');
+    isLoading.value = true;
+    errorMessage.value = '';
+
+    try {
+      final result = await weatherService.fetchWeather(city: city);
+      if (result == null) {
+        errorMessage.value = 'Cidade não encontrada ou erro na API.';
+        debugPrint('[WeatherController] Clima não encontrado para $city');
+      } else {
+        weather.value = result;
+        _currentCity = city;
+        debugPrint('[WeatherController] Clima atual recebido: ${result.main?.temp}°C');
+        await Future.wait([
+          fetchHourlyForecast(),
+          fetchWeeklyForecast(),
+        ]);
+      }
+    } catch (e) {
+      errorMessage.value = 'Erro ao buscar clima: $e';
+      debugPrint('[WeatherController] Erro ao buscar clima: $e');
+    } finally {
+      isLoading.value = false;
     }
-  } catch (e) {
-    errorMessage.value = 'Erro ao buscar clima: $e';
-  } finally {
-    isLoading.value = false;
   }
-}
 
   Future<void> _loadAll() async {
+    debugPrint('[WeatherController] Iniciando _loadAll');
     isLoading.value = true;
     errorMessage.value = '';
 
     try {
       _currentCity = await getCurrentCity();
+      debugPrint('[WeatherController] Cidade atual detectada: $_currentCity');
+
       if (_currentCity == null) {
         errorMessage.value = 'Por favor ligue a localização ';
+        debugPrint('[WeatherController] Localização não disponível');
         return;
       }
 
@@ -66,45 +76,63 @@ class WeatherController extends GetxController {
       ]);
     } catch (e) {
       errorMessage.value = 'Erro ao carregar dados: $e';
+      debugPrint('[WeatherController] Erro ao carregar dados: $e');
     } finally {
       isLoading.value = false;
     }
   }
 
   Future<void> fetchWeather() async {
+    debugPrint('[WeatherController] Buscando clima atual para $_currentCity');
     try {
-  
       final result = await weatherService.fetchWeather(city: _currentCity!);
       if (result == null) {
         errorMessage.value = 'Não foi possível obter os dados do clima.';
+        debugPrint('[WeatherController] Clima atual não encontrado');
       } else {
         weather.value = result;
+        debugPrint('[WeatherController] Clima atual recebido: ${result.main?.temp}°C');
       }
     } catch (e) {
       errorMessage.value = 'Erro ao buscar clima atual: $e';
+      debugPrint('[WeatherController] Erro ao buscar clima atual: $e');
     }
   }
 
   Future<void> fetchHourlyForecast() async {
     try {
       final city = weather.value?.name ?? _currentCity;
-      if (city == null) throw Exception('Cidade nula');
+      if (city == null) {
+        debugPrint('[WeatherController] Cidade nula ao buscar previsão por hora');
+        throw Exception('Cidade nula');
+      }
+
+      debugPrint('[WeatherController] Buscando previsão por hora para $city');
       final list = await weatherService.getHourlyForecast(city: city);
       hourlyForecast.value = list;
+      debugPrint('[WeatherController] Previsão por hora recebida: ${list.length} itens');
     } catch (e) {
       errorMessage.value = 'Erro ao buscar previsão por hora: $e';
+      debugPrint('[WeatherController] Erro ao buscar previsão por hora: $e');
     }
   }
 
   Future<void> fetchWeeklyForecast() async {
     try {
       final city = weather.value?.name ?? _currentCity;
-      if (city == null) throw Exception('Cidade nula');
+      if (city == null) {
+        debugPrint('[WeatherController] Cidade nula ao buscar previsão semanal');
+        throw Exception('Cidade nula');
+      }
+
+      debugPrint('[WeatherController] Buscando previsão semanal para $city');
       final wf = await weatherService.getWeeklyForecast(city: city);
       weeklyForecast.value = wf;
       dailyForecast.value = wf.daily;
+      debugPrint('[WeatherController] Previsão semanal recebida: ${wf.daily.length} dias');
     } catch (e) {
       errorMessage.value = 'Erro ao buscar previsão semanal: $e';
+      debugPrint('[WeatherController] Erro ao buscar previsão semanal: $e');
     }
   }
 
@@ -132,3 +160,4 @@ class WeatherController extends GetxController {
     }
   }
 }
+  

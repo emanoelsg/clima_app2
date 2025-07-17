@@ -31,6 +31,7 @@ class WeatherService {
         _baseUrl,
         queryParameters: _buildQuery(city),
         options: Options(receiveTimeout: _timeout),
+        
       );
 
       if (response.statusCode != 200) {
@@ -64,31 +65,32 @@ class WeatherService {
 
   /// ⏰ Previsão por hora (próximas 8 horas)
   Future<List<HourlyForecast>> getHourlyForecast({required String city}) async {
-    try {
-      final response = await _dio.get(
-        _forecastUrl,
-        queryParameters: _buildQuery(city),
-        options: Options(receiveTimeout: _timeout),
+  try {
+    final response = await _dio.get(
+      _forecastUrl,
+      queryParameters: _buildQuery(city),
+      options: Options(receiveTimeout: _timeout),
+    );
+
+    final List list = response.data['list'];
+
+    return list.take(8).map((item) {
+      final dt = DateTime.parse(item['dt_txt']);
+      final weatherList = item['weather'] as List?;
+      final iconCode = weatherList?.isNotEmpty == true
+          ? weatherList![0]['icon'] as String? ?? '01d'
+          : '01d';
+      final temp = (item['main']['temp'] as num).round();
+
+      return HourlyForecast(
+        time: '${dt.hour.toString().padLeft(2, '0')}:00',
+        iconCode: iconCode,
+        temp: temp,
       );
-
-      final List list = response.data['list'];
-
-      return list.take(8).map((item) {
-        final dt = DateTime.parse(item['dt_txt']);
-        final weatherList = item['weather'] as List?;
-        final iconCode = weatherList?.isNotEmpty == true
-            ? weatherList![0]['icon'] as String? ?? '01d'
-            : '01d';
-        final temp = (item['main']['temp'] as num).round();
-
-        return HourlyForecast(
-          time: '${dt.hour.toString().padLeft(2, '0')}:00',
-          iconCode: iconCode,
-          temp: temp,
-        );
-      }).toList();
-    } catch (e) {
-      throw Exception('Erro ao buscar previsão por hora: $e');
-    }
+    }).toList();
+  } catch (e) {
+    print('Erro ao buscar previsão por hora: $e');
+    return []; // ← evita crash e mostra fallback
   }
+}
 }

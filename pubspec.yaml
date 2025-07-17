@@ -18,7 +18,7 @@ dependencies:
   get: ^4.7.2
   flutter_native_splash: ^2.4.6
   geolocator: ^14.0.2
-  geocoding: ^4.0.0
+  geocoding: ^2.1.0
   google_fonts: ^6.2.1
   flutter_svg: ^2.2.0
   flutter_animate: ^4.5.2
@@ -30,7 +30,7 @@ dependencies:
 
 flutter_native_splash:
   color: "#121212"
-  image: "assets/splash_logo/airget_studio_logo.png"
+  image: assets/splash_logo/airget_studio_logo.png
   android: true
   ios: true
   android_gravity: center
@@ -49,6 +49,21 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
 flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+        - asset: assets/fonts/Poppins-Black.ttf
+        - asset: assets/fonts/Poppins-Italic.ttf
+        - asset: assets/fonts/Poppins-Light.ttf
+        - asset: assets/fonts/Poppins-Thin.ttf
+        - asset: assets/fonts/Poppins-SemiBold.ttf
+        - asset: assets/fonts/Poppins-ExtraBold.ttf     
+
   assets:
     - assets/splash_logo/
-  uses-material-design: true
+    - assets/fonts/
