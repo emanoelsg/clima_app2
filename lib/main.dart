@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:clima_app2/app/view/search_screen/search_screen.dart';
+import 'package:get_storage/get_storage.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,12 +14,13 @@ Future<void> main() async {
     FlutterError.presentError(details);
   };
   await initializeDateFormatting('pt_BR', null);
-
-  runApp(const MyApp());
+await GetStorage.init();
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+
+   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

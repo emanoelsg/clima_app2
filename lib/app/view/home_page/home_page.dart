@@ -16,7 +16,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final controller = Get.put(WeatherController());
+  final controller = Get.find<WeatherController>();
+
   final TextEditingController _cityController = TextEditingController();
 
   @override
@@ -31,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
       final weather = controller.weather.value;
       final isLoading = controller.isLoading.value;
       final hasError = controller.errorMessage.isNotEmpty;
-
 
       return Scaffold(
         body: Container(
@@ -77,7 +77,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           TextButton.icon(
-                            onPressed: () => Get.to(() => SearchScreen()),
+                            onPressed:
+                                controller.isLoading.value
+                                    ? null
+                                    : () => Get.dialog( const SearchScreen()),
+
                             icon: const Icon(
                               Icons.location_on,
                               color: Colors.white,

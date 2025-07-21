@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:clima_app2/app/controller/api_controller.dart';
 
-
-
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 
@@ -17,19 +15,17 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Container(
+    // Obx só onde precisa: o AnimatedContainer depende do gradiente
+    return Obx(() => AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: controller.backgroundGradient,
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+            gradient: controller.backgroundGradient.value,
           ),
           child: Scaffold(
-            backgroundColor: Colors.transparent, // importante!
+            backgroundColor: Colors.transparent,
             appBar: AppBar(
-              title: const Text('Buscar cidade'),
               backgroundColor: Colors.black,
+              title: const Text('Buscar cidade'),
             ),
             body: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -58,13 +54,17 @@ class _SearchScreenState extends State<SearchScreen> {
                               if (city.isNotEmpty) {
                                 await controller.fetchWeatherByCity(city);
                                 if (controller.errorMessage.isEmpty) {
-                                  Get.back(); // Volta para a tela anterior
+                                  Get.back(); // Volta para tela anterior
                                 } else {
-                                  Get.snackbar(
-                                    'Erro',
-                                    controller.errorMessage.value,
-                                    backgroundColor: Colors.redAccent,
-                                    colorText: Colors.white,
+                                  Get.defaultDialog(
+                                    title: 'Oops!',
+                                    middleText:
+                                        controller.errorMessage.value,
+                                    backgroundColor: Colors.grey[900],
+                                    titleStyle:
+                                        const TextStyle(color: Colors.white),
+                                    middleTextStyle: const TextStyle(
+                                        color: Colors.white70),
                                   );
                                 }
                               }
@@ -77,10 +77,43 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           );
                   }),
+                  const SizedBox(height: 12),
+                  const Divider(color: Colors.white24),
+                  const SizedBox(height: 12),
+                  Obx(() => TextButton.icon(
+                        onPressed: controller.isLoading.value
+                            ? null
+                            : () async {
+                                await controller.loadAll();
+                                if (controller.errorMessage.isEmpty) {
+                                  Get.back();
+                                } else {
+                                  Get.defaultDialog(
+                                    title: 'Oops!',
+                                    middleText:
+                                        controller.errorMessage.value,
+                                    backgroundColor: Colors.grey[900],
+                                    titleStyle:
+                                        const TextStyle(color: Colors.white),
+                                    middleTextStyle: const TextStyle(
+                                        color: Colors.white70),
+                                  );
+                                }
+                              },
+                        icon: const Icon(Icons.gps_fixed,
+                            color: Colors.white),
+                        label: const Text('Detectar minha localização'),
+                      )),
                 ],
               ),
             ),
           ),
         ));
+  }
+
+  @override
+  void dispose() {
+    _cityController.dispose();
+    super.dispose();
   }
 }
