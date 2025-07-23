@@ -1,3 +1,4 @@
+// app/view/home_page/home_page.dart
 import 'package:clima_app2/app/view/search_screen/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _cityController.dispose();
     super.dispose();
-  }
+  }//Text
 
   @override
   Widget build(BuildContext context) {

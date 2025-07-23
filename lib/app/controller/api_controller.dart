@@ -1,3 +1,4 @@
+// app/controller/api_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,8 +19,9 @@ class WeatherController extends GetxController {
   final weather = Rxn<WeatherModel>();
   final weeklyForecast = Rxn<WeeklyForecast>();
   final hourlyForecast = <HourlyForecast>[].obs;
-  final dailyForecast = <DailyForecast>[].obs;
-
+  final dailyForecast = <DailyForecast>[].obs; 
+  String? _currentCity;
+  String get city => _currentCity ?? 'Cidade desconhecida';
   final backgroundGradient = Rx<Gradient>(
     const LinearGradient(
       colors: [Color(0xFF1E3C72), Color(0xFF2A5298)],
@@ -31,7 +33,7 @@ class WeatherController extends GetxController {
   final isLoading = false.obs;
   final errorMessage = ''.obs;
 
-  String? _currentCity;
+
   String get condition => weather.value?.weather.first.main ?? 'Clear';
 
   @override
