@@ -2,7 +2,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:clima_app2/app/controller/api_controller.dart';
+import 'package:clima_app2/app/controller/weather_controller.dart';
 import 'package:clima_app2/app/core/theme/colors/app_colors.dart';
 
 class LoadingScreen extends StatefulWidget {

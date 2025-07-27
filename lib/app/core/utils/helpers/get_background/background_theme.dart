@@ -1,5 +1,5 @@
+// app/core/utils/helpers/get_background/background_theme.dart
 import 'package:flutter/material.dart';
-
 
 class WeatherBackground {
   static List<Color> getGradient(String condition) {
@@ -20,4 +20,24 @@ class WeatherBackground {
     } else {
       return [Color(0xFF1E3C72), Color(0xFF2A5298)];
     }
-  }}
+  }
+static Color getAccent(String condition) {
+  final cond = condition.toLowerCase();
+
+  if (cond.contains('clear')) {
+    return const Color(0xFF0D47A1); // azul profundo
+  } else if (cond.contains('cloud')) {
+    return const Color(0xFF1C1C1E); // cinza quase preto
+  } else if (cond.contains('rain') || cond.contains('drizzle')) {
+    return const Color(0xFF263238); // azul acinzentado escuro
+  } else if (cond.contains('snow')) {
+    return const Color(0xFF37474F); // cinza azulado médio
+  } else if (cond.contains('thunder')) {
+    return const Color(0xFF1A237E); // azul escuro intenso
+  } else if (cond.contains('fog') || cond.contains('mist') || cond.contains('haze')) {
+    return const Color(0xFF212121); // cinza carvão
+  } else {
+    return const Color(0xFF2C3E50); // azul petróleo escuro
+  }
+}
+}

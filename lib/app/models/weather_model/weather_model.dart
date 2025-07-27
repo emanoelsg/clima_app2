@@ -1,3 +1,4 @@
+// app/models/weather_model/weather_model.dart
 class WeatherModel {
   final Coord? coord;
   final List<Weather> weather;
@@ -225,10 +226,13 @@ class Wind {
   final double? speed;
   final int? deg;
   final double? gust;
-
-  factory Wind.fromJson(Map<String, dynamic> json) {
-    return Wind(speed: json["speed"], deg: json["deg"], gust: json["gust"]);
-  }
+factory Wind.fromJson(Map<String, dynamic> json) {
+  return Wind(
+    speed: (json["speed"] as num?)?.toDouble(),
+    deg: json["deg"] as int?,
+    gust: (json["gust"] as num?)?.toDouble(),
+  );
+}
 
   Map<String, dynamic> toJson() => {"speed": speed, "deg": deg, "gust": gust};
 }

@@ -30,13 +30,13 @@ dependencies:
 
 
 
-# flutter_native_splash:
-#   color: "#121212"
-#   image: assets/splash_logo/airget_studio_logo.png
-#   android: true
-#   ios: true
-#   android_gravity: center
-#   fullscreen: true
+flutter_native_splash:
+  color: "#121212"
+  image: assets/splash_logo/airget_studio_logo.png
+  android: true
+  ios: true
+  android_gravity: center
+  fullscreen: true
 
 
 dev_dependencies:
@@ -52,6 +52,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  # integration_test:
+  #   enabled: true
 
   fonts:
     - family: Poppins

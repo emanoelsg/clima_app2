@@ -1,4 +1,4 @@
-// app/controller/api_controller.dart
+// app/controller/weather_controller.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -13,7 +13,7 @@ import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.
 import 'package:clima_app2/app/core/utils/helpers/get_background/background_theme.dart';
 
 class WeatherController extends GetxController {
-  final WeatherService weatherService = WeatherService();
+   WeatherService weatherService = WeatherService();
   final storage = GetStorage();
 
   final weather = Rxn<WeatherModel>();
@@ -33,8 +33,15 @@ class WeatherController extends GetxController {
   final isLoading = false.obs;
   final errorMessage = ''.obs;
 
+  WeatherController({WeatherService? service})
+      : weatherService = service ?? WeatherService();
 
   String get condition => weather.value?.weather.first.main ?? 'Clear';
+@visibleForTesting
+set testCity(String city) {
+  _currentCity = city;
+}
+
 
   @override
   void onInit() {
@@ -44,36 +51,37 @@ class WeatherController extends GetxController {
   }
 
   Future<void> loadAll() async {
-    debugPrint('[WeatherController] Iniciando loadAll');
-    isLoading.value = true;
-    errorMessage.value = '';
+  debugPrint('[WeatherController] Iniciando loadAll');
+  isLoading.value = true;
+  errorMessage.value = '';
 
-    try {
+  try {
+    if (_currentCity == null || _currentCity!.isEmpty) {
       _currentCity = await getCurrentCity();
-
-      if (_currentCity == null || _currentCity!.isEmpty) {
-        errorMessage.value = 'Localização não disponível. Ligue o GPS.';
-        debugPrint('[WeatherController] GPS falhou');
-        carregarClimaLocal();
-        return;
-      }
-
-      debugPrint('[WeatherController] Cidade detectada: $_currentCity');
-
-      await fetchWeather();
-      await Future.wait([
-        fetchHourlyForecast(),
-        fetchWeeklyForecast(),
-      ]);
-    } catch (e) {
-      errorMessage.value = 'Erro ao carregar dados: $e';
-      debugPrint('[WeatherController] Erro: $e');
-      carregarClimaLocal();
-    } finally {
-      isLoading.value = false;
     }
-  }
 
+    if (_currentCity == null || _currentCity!.isEmpty) {
+      errorMessage.value = 'Localização não disponível. Ligue o GPS.';
+      debugPrint('[WeatherController] GPS falhou');
+      carregarClimaLocal();
+      return;
+    }
+
+    debugPrint('[WeatherController] Cidade detectada: $_currentCity');
+
+    await fetchWeather();
+    await Future.wait([
+      fetchHourlyForecast(),
+      fetchWeeklyForecast(),
+    ]);
+  } catch (e) {
+    errorMessage.value = 'Erro ao carregar dados: $e';
+    debugPrint('[WeatherController] Erro: $e');
+    carregarClimaLocal();
+  } finally {
+    isLoading.value = false;
+  }
+}
   Future<void> fetchWeather() async {
     debugPrint('[WeatherController] Buscando clima para $_currentCity');
     isLoading.value = true;

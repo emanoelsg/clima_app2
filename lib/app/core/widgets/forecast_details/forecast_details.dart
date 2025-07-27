@@ -1,10 +1,11 @@
+// app/core/widgets/forecast_details/forecast_details.dart
 import 'package:clima_app2/app/models/daily_forecast/daily_forecast.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:get/get.dart';
 
-import 'package:clima_app2/app/controller/api_controller.dart';
+import 'package:clima_app2/app/controller/weather_controller.dart';
 
 class ForecastList extends StatelessWidget {
   final List<DailyForecast> forecast;
