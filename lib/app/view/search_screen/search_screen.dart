@@ -1,7 +1,7 @@
 // app/view/search_screen/search_screen.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:clima_app2/app/controller/api_controller.dart';
+import 'package:clima_app2/app/controller/weather_controller.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -19,85 +19,83 @@ class _SearchScreenState extends State<SearchScreen> {
     return Obx(() {
       final isLoading = controller.isLoading.value;
 
-      return AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
-        decoration: BoxDecoration(
-          gradient: controller.backgroundGradient.value,
-        ),
-        child: Scaffold(
+      return Scaffold(
+        backgroundColor: Colors.black87,
+        appBar: AppBar(
           backgroundColor: Colors.transparent,
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 30),
-                TextField(
-                  controller: _cityController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    hintText: 'Digite o nome da cidade',
-                    hintStyle: const TextStyle(color: Colors.grey),
-                    filled: true,
-                    fillColor: Colors.grey[900],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+          elevation: 0,
+          title: const Text('Buscar cidade'),
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: _cityController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: 'Digite o nome da cidade',
+                  hintStyle: const TextStyle(color: Colors.grey),
+                  filled: true,
+                  fillColor: Colors.grey[850],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                const SizedBox(height: 20),
-                ElevatedButton.icon(
-                  onPressed: isLoading
-                      ? null
-                      : () async {
-                          final city = _cityController.text.trim();
-                          if (city.isNotEmpty) {
-                            await controller.fetchWeatherByCity(city);
-                            if (controller.errorMessage.isEmpty) {
-                              _cityController.clear();
-                              Get.back();
-                            } else {
-                              Get.defaultDialog(
-                                title: 'Oops!',
-                                middleText: controller.errorMessage.value,
-                                backgroundColor: Colors.grey[900],
-                                titleStyle: const TextStyle(color: Colors.white),
-                                middleTextStyle: const TextStyle(color: Colors.white70),
-                              );
-                            }
-                          }
-                        },
-                  icon: const Icon(Icons.search),
-                  label: const Text('Buscar'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                const Divider(color: Colors.white24),
-                const SizedBox(height: 12),
-                TextButton.icon(
-                  onPressed: isLoading
-                      ? null
-                      : () async {
-                          await controller.loadAll();
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        final city = _cityController.text.trim();
+                        if (city.isNotEmpty) {
+                          await controller.fetchWeatherByCity(city);
                           if (controller.errorMessage.isEmpty) {
+                            _cityController.clear();
                             Get.back();
                           } else {
-                            Get.defaultDialog(
-                              title: 'Oops!',
-                              middleText: controller.errorMessage.value,
-                              backgroundColor: Colors.grey[900],
-                              titleStyle: const TextStyle(color: Colors.white),
-                              middleTextStyle: const TextStyle(color: Colors.white70),
+                            Get.snackbar(
+                              'Erro',
+                              controller.errorMessage.value,
+                              backgroundColor: Colors.redAccent,
+                              colorText: Colors.white,
                             );
                           }
-                        },
-                  icon: const Icon(Icons.gps_fixed, color: Colors.white),
-                  label: const Text('Detectar minha localização'),
+                        }
+                      },
+                icon: const Icon(Icons.search),
+                label: const Text('Buscar'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                  foregroundColor: Colors.white,
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 20),
+              TextButton.icon(
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        await controller.loadAll();
+                        if (controller.errorMessage.isEmpty) {
+                          Get.back();
+                        } else {
+                          Get.snackbar(
+                            'Erro',
+                            controller.errorMessage.value,
+                            backgroundColor: Colors.redAccent,
+                            colorText: Colors.white,
+                          );
+                        }
+                      },
+                icon: const Icon(Icons.gps_fixed, color: Colors.white),
+                label: const Text(
+                  'Detectar minha localização',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
         ),
       );

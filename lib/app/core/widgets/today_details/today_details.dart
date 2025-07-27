@@ -1,7 +1,8 @@
+// app/core/widgets/today_details/today_details.dart
 import 'package:clima_app2/app/models/hourly_model/hourly_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:clima_app2/app/controller/api_controller.dart';
+import 'package:clima_app2/app/controller/weather_controller.dart';
 
 class TodayForecastList extends StatelessWidget {
   final List<HourlyForecast> forecast;
