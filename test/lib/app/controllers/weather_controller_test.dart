@@ -20,12 +20,27 @@ void main() {
   late WeatherController controller;
   late MockWeatherService mockService;
 
-  setUpAll(() async {
-    await GetStorage.init();
-  });
+  // Mock simples de GetStorage para evitar MissingPluginException
+  class FakeStorage extends GetStorage {
+    final Map<String, dynamic> _store = {};
+
+    @override
+    dynamic read(String key) => _store[key];
+
+    @override
+    Future<void> write(String key, value) async {
+      _store[key] = value;
+    }
+
+    @override
+    Future<void> erase() async {
+      _store.clear();
+    }
+  }
 
   setUp(() {
     Get.reset();
+    Get.put<GetStorage>(FakeStorage()); // Injeta o mock de GetStorage
     mockService = MockWeatherService();
 
     // Mock de resposta bem-sucedida
@@ -90,7 +105,7 @@ void main() {
 
     await controller.loadAll();
 
-    expect(controller.errorMessage.value, contains('Erro ao carregar dados'));
+    expect(controller.errorMessage.value, contains('Erro ao buscar clima'));
     expect(controller.weather.value, isNull);
   });
 
@@ -101,5 +116,19 @@ void main() {
     expect(controller.hourlyForecast.length, greaterThan(0));
     expect(controller.weeklyForecast.value, isA<WeeklyForecast>());
     expect(controller.errorMessage.value, isEmpty);
+  });
+
+  test('fetchWeatherByCity with valid city', () async {
+    await controller.fetchWeatherByCity('São Paulo');
+    expect(controller.errorMessage.value, isEmpty);
+    expect(controller.city, 'São Paulo');
+  });
+
+  test('fetchWeatherByCity with invalid city', () async {
+    when(mockService.fetchWeather(city: 'CidadeInexistente123'))
+        .thenThrow(Exception('Cidade não encontrada'));
+
+    await controller.fetchWeatherByCity('CidadeInexistente123');
+    expect(controller.errorMessage.value.isNotEmpty, true);
   });
 }

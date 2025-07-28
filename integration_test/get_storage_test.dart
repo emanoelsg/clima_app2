@@ -1,14 +1,30 @@
 // integration_test/weather_controller_test.dart
+import 'package:clima_app2/app/controller/weather_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:get_storage/get_storage.dart';
-
-import 'package:clima_app2/app/controller/weather_controller.dart';
 import 'package:clima_app2/app/models/weather_model/weather_model.dart';
 
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  testWidgets('Dados persistem entre sessões', (WidgetTester tester) async {
+    await GetStorage.init();
+    final controller = WeatherController();
+
+    // Simula busca e salvamento
+    await controller.fetchWeatherByCity('Belo Horizonte');
+    controller.salvarClimaLocal();
+
+    // Simula reinício do app
+    final novoController = WeatherController();
+    novoController.carregarClimaLocal();
+
+    final clima = novoController.weather.value;
+
+    expect(clima, isNotNull);
+    expect(clima?.name?.toLowerCase(), contains('belo horizonte'));
+  });
 
   testWidgets('WeatherController salva e carrega clima local corretamente', (WidgetTester tester) async {
     await GetStorage.init();
