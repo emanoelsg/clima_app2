@@ -29,19 +29,20 @@ dependencies:
 
 
 
-
 flutter_native_splash:
   color: "#121212"
-  image: assets/splash_logo/airget_studio_logo.png
+  color_dark: "#121212"
+  image: assets/splash_logo/logo.png
   android: true
   ios: true
-  android_gravity: center
   fullscreen: true
-
+  android_gravity: center
+  ios_content_mode: center
 
 dev_dependencies:
   integration_test:
     sdk: flutter
+  path_provider_platform_interface: ^2.0.0
 
   mockito: ^5.4.2
   build_runner: ^2.4.4
@@ -52,9 +53,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  # integration_test:
-  #   enabled: true
-
   fonts:
     - family: Poppins
       fonts:

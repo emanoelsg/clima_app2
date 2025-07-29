@@ -30,6 +30,7 @@ class _SearchScreenState extends State<SearchScreen> {
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextField(
                 controller: _cityController,
@@ -46,11 +47,20 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
-                onPressed: isLoading
-                    ? null
-                    : () async {
-                        final city = _cityController.text.trim();
-                        if (city.isNotEmpty) {
+                onPressed:
+                    isLoading
+                        ? null
+                        : () async {
+                          final city = _cityController.text.trim();
+                          if (city.length < 2) {
+                            Get.snackbar(
+                              'Aviso',
+                              'Digite pelo menos 2 letras.',
+                              backgroundColor: Colors.orange,
+                              colorText: Colors.white,
+                            );
+                            return;
+                          }
                           await controller.fetchWeatherByCity(city);
                           if (controller.errorMessage.isEmpty) {
                             _cityController.clear();
@@ -63,8 +73,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               colorText: Colors.white,
                             );
                           }
-                        }
-                      },
+                        },
                 icon: const Icon(Icons.search),
                 label: const Text('Buscar'),
                 style: ElevatedButton.styleFrom(
@@ -74,22 +83,33 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
               const SizedBox(height: 20),
               TextButton.icon(
-                onPressed: isLoading
-                    ? null
-                    : () async {
-                        await controller.loadAll();
-                        if (controller.errorMessage.isEmpty) {
-                          Get.back();
-                        } else {
-                          Get.snackbar(
-                            'Erro',
-                            controller.errorMessage.value,
-                            backgroundColor: Colors.redAccent,
-                            colorText: Colors.white,
-                          );
-                        }
-                      },
-                icon: const Icon(Icons.gps_fixed, color: Colors.white),
+                onPressed:
+                    isLoading
+                        ? null
+                        : () async {
+                          await controller.loadAll();
+                          if (controller.errorMessage.isEmpty) {
+                            Get.back();
+                          } else {
+                            Get.snackbar(
+                              'Erro',
+                              controller.errorMessage.value,
+                              backgroundColor: Colors.redAccent,
+                              colorText: Colors.white,
+                            );
+                          }
+                        },
+                icon:
+                    isLoading
+                        ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                        : const Icon(Icons.gps_fixed, color: Colors.white),
                 label: const Text(
                   'Detectar minha localização',
                   style: TextStyle(color: Colors.white),
