@@ -42,6 +42,7 @@ flutter_native_splash:
 dev_dependencies:
   integration_test:
     sdk: flutter
+  path_provider_platform_interface: ^2.0.0
 
   mockito: ^5.4.2
   build_runner: ^2.4.4

@@ -1,8 +1,8 @@
 // app/controller/weather_controller.dart
+import 'package:clima_app2/app/core/utils/helpers/ui_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:weather_icons/weather_icons.dart';
 import 'dart:async';
 import 'package:clima_app2/app/models/weather_model/weather_model.dart';
 import 'package:clima_app2/app/models/hourly_model/hourly_model.dart';
@@ -10,7 +10,6 @@ import 'package:clima_app2/app/models/weekly_model/weekly_forecast_model.dart';
 import 'package:clima_app2/app/models/daily_forecast/daily_forecast.dart';
 import 'package:clima_app2/app/service/weather_service.dart';
 import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.dart';
-import 'package:clima_app2/app/core/utils/helpers/get_background/background_theme.dart';
 
 class WeatherController extends GetxController {
    WeatherService weatherService = WeatherService();
@@ -186,15 +185,7 @@ set testCity(String city) {
     }
   }
 
-  void updateBackgroundGradient() {
-    final colors = WeatherBackground.getGradient(condition);
-    backgroundGradient.value = LinearGradient(
-      colors: colors,
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-    );
-    debugPrint('[WeatherController] Gradiente para $condition');
-  }
+
 
   void salvarClimaLocal() {
     final data = weather.value?.toJson();
@@ -213,28 +204,12 @@ set testCity(String city) {
       debugPrint('[WeatherController] Nenhum cache disponível');
     }
   }
+void updateBackgroundGradient() {
+  backgroundGradient.value = WeatherUIHelper.getGradient(condition);
+  debugPrint('[WeatherController] Gradiente para $condition');
+}
 
-  IconData getWeatherIcon(String code) {
-    switch (code) {
-      case '01d': return WeatherIcons.day_sunny;
-      case '01n': return WeatherIcons.night_clear;
-      case '02d': return WeatherIcons.day_cloudy;
-      case '02n': return WeatherIcons.night_alt_cloudy;
-      case '03d':
-      case '03n': return WeatherIcons.cloud;
-      case '04d':
-      case '04n': return WeatherIcons.cloudy;
-      case '09d':
-      case '09n': return WeatherIcons.showers;
-      case '10d': return WeatherIcons.day_rain;
-      case '10n': return WeatherIcons.night_alt_rain;
-      case '11d':
-      case '11n': return WeatherIcons.thunderstorm;
-      case '13d':
-      case '13n': return WeatherIcons.snow;
-      case '50d':
-      case '50n': return WeatherIcons.fog;
-      default: return WeatherIcons.na;
-    }
-  }
+IconData getWeatherIcon(String code) {
+  return WeatherUIHelper.getIcon(code);
+}
 }
