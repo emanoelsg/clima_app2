@@ -1,3 +1,4 @@
+// app/models/daily_forecast/daily_forecast.dart
 class DailyForecast {
   final DateTime date;
   final double maxTemp;

@@ -1,3 +1,4 @@
+// app/models/hourly_model/hourly_model.dart
 class HourlyForecast {
   final String time;
   final String iconCode;
@@ -6,6 +7,6 @@ class HourlyForecast {
   HourlyForecast({
     required this.time,
     required this.iconCode,
-    required this.temp,
+    required this.temp, 
   });
 }

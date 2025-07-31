@@ -12,13 +12,14 @@ import 'package:clima_app2/app/service/weather_service.dart';
 import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.dart';
 
 class WeatherController extends GetxController {
-   WeatherService weatherService = WeatherService();
-  final storage = GetStorage();
+
+  final GetStorage storage;
+  final WeatherService weatherService;
 
   final weather = Rxn<WeatherModel>();
   final weeklyForecast = Rxn<WeeklyForecast>();
   final hourlyForecast = <HourlyForecast>[].obs;
-  final dailyForecast = <DailyForecast>[].obs; 
+  final dailyForecast = <DailyForecast>[].obs;
   String? _currentCity;
   String get city => _currentCity ?? 'Cidade desconhecida';
   final backgroundGradient = Rx<Gradient>(
@@ -32,15 +33,15 @@ class WeatherController extends GetxController {
   final isLoading = false.obs;
   final errorMessage = ''.obs;
 
-  WeatherController({WeatherService? service})
-      : weatherService = service ?? WeatherService();
+  WeatherController({WeatherService? service, GetStorage? storage})
+    : weatherService = service ?? WeatherService(),
+      storage = storage ?? GetStorage();
 
   String get condition => weather.value?.weather.first.main ?? 'Clear';
-@visibleForTesting
-set testCity(String city) {
-  _currentCity = city;
-}
-
+  @visibleForTesting
+  set testCity(String city) {
+    _currentCity = city;
+  }
 
   @override
   void onInit() {
@@ -50,37 +51,35 @@ set testCity(String city) {
   }
 
   Future<void> loadAll() async {
-  debugPrint('[WeatherController] Iniciando loadAll');
-  isLoading.value = true;
-  errorMessage.value = '';
+    debugPrint('[WeatherController] Iniciando loadAll');
+    isLoading.value = true;
+    errorMessage.value = '';
 
-  try {
-    if (_currentCity == null || _currentCity!.isEmpty) {
-      _currentCity = await getCurrentCity();
-    }
+    try {
+      if (_currentCity == null || _currentCity!.isEmpty) {
+        _currentCity = await getCurrentCity();
+      }
 
-    if (_currentCity == null || _currentCity!.isEmpty) {
-      errorMessage.value = 'Localização não disponível. Ligue o GPS.';
-      debugPrint('[WeatherController] GPS falhou');
+      if (_currentCity == null || _currentCity!.isEmpty) {
+        errorMessage.value = 'Localização não disponível. Ligue o GPS.';
+        debugPrint('[WeatherController] GPS falhou');
+        carregarClimaLocal();
+        return;
+      }
+
+      debugPrint('[WeatherController] Cidade detectada: $_currentCity');
+
+      await fetchWeather();
+      await Future.wait([fetchHourlyForecast(), fetchWeeklyForecast()]);
+    } catch (e) {
+      errorMessage.value = 'Erro ao carregar dados: $e';
+      debugPrint('[WeatherController] Erro: $e');
       carregarClimaLocal();
-      return;
+    } finally {
+      isLoading.value = false;
     }
-
-    debugPrint('[WeatherController] Cidade detectada: $_currentCity');
-
-    await fetchWeather();
-    await Future.wait([
-      fetchHourlyForecast(),
-      fetchWeeklyForecast(),
-    ]);
-  } catch (e) {
-    errorMessage.value = 'Erro ao carregar dados: $e';
-    debugPrint('[WeatherController] Erro: $e');
-    carregarClimaLocal();
-  } finally {
-    isLoading.value = false;
   }
-}
+
   Future<void> fetchWeather() async {
     debugPrint('[WeatherController] Buscando clima para $_currentCity');
     isLoading.value = true;
@@ -142,10 +141,7 @@ set testCity(String city) {
 
       debugPrint('[WeatherController] Clima manual: ${result.main?.temp}°C');
 
-      await Future.wait([
-        fetchHourlyForecast(),
-        fetchWeeklyForecast(),
-      ]);
+      await Future.wait([fetchHourlyForecast(), fetchWeeklyForecast()]);
     } catch (e) {
       errorMessage.value = 'Erro ao buscar clima: $e';
       debugPrint('[WeatherController] Erro: $e');
@@ -185,8 +181,6 @@ set testCity(String city) {
     }
   }
 
-
-
   void salvarClimaLocal() {
     final data = weather.value?.toJson();
     if (data != null) {
@@ -204,12 +198,13 @@ set testCity(String city) {
       debugPrint('[WeatherController] Nenhum cache disponível');
     }
   }
-void updateBackgroundGradient() {
-  backgroundGradient.value = WeatherUIHelper.getGradient(condition);
-  debugPrint('[WeatherController] Gradiente para $condition');
-}
 
-IconData getWeatherIcon(String code) {
-  return WeatherUIHelper.getIcon(code);
-}
+  void updateBackgroundGradient() {
+    backgroundGradient.value = WeatherUIHelper.getGradient(condition);
+    debugPrint('[WeatherController] Gradiente para $condition');
+  }
+
+  IconData getWeatherIcon(String code) {
+    return WeatherUIHelper.getIcon(code);
+  }
 }
