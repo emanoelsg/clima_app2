@@ -17,6 +17,7 @@ import 'package:clima_app2/app/models/weekly_model/weekly_forecast_model.dart';
 import 'package:clima_app2/app/service/weather_service.dart';
 
 class MockStorage extends Mock implements GetStorage {}
+
 class MockWeatherService extends Mock implements WeatherService {}
 
 void main() {
@@ -48,7 +49,14 @@ void main() {
     test('salvarClimaLocal salva dados no storage', () {
       final mockWeather = WeatherModel(
         coord: Coord(lon: -42.0, lat: -19.0),
-        weather: [Weather(id: 800, main: 'Clear', description: 'céu limpo', icon: '01d')],
+        weather: [
+          Weather(
+            id: 800,
+            main: 'Clear',
+            description: 'céu limpo',
+            icon: '01d',
+          ),
+        ],
         base: 'stations',
         main: Main(
           temp: 25.0,
@@ -65,7 +73,13 @@ void main() {
         rain: Rain(the1H: 0.0),
         clouds: Clouds(all: 0),
         dt: 1627776000,
-        sys: Sys(type: 1, id: 1234, country: 'BR', sunrise: 1627730000, sunset: 1627776000),
+        sys: Sys(
+          type: 1,
+          id: 1234,
+          country: 'BR',
+          sunrise: 1627730000,
+          sunset: 1627776000,
+        ),
         timezone: -10800,
         id: 123456,
         name: 'Caratinga',
@@ -75,7 +89,9 @@ void main() {
       controller.weather.value = mockWeather;
       controller.salvarClimaLocal();
 
-      verify(() => mockStorage.write('clima_salvo', mockWeather.toJson())).called(1);
+      verify(
+        () => mockStorage.write('clima_salvo', mockWeather.toJson()),
+      ).called(1);
     });
 
     test('carregarClimaLocal lê dados do storage', () {
@@ -87,7 +103,7 @@ void main() {
             'main': 'Clear',
             'description': 'céu limpo',
             'icon': '01d',
-          }
+          },
         ],
       };
 
@@ -133,10 +149,26 @@ void main() {
         HourlyForecast(time: '15:00', iconCode: '02d', temp: 27),
       ];
 
-      when(() => mockService.getHourlyForecast(city: any(named: 'city')))
-          .thenAnswer((_) async => mockHourly);
+      when(
+        () => mockService.getHourlyForecast(city: any(named: 'city')),
+      ).thenAnswer((_) async => mockHourly);
 
-      controller.weather.value = WeatherModel(name: 'Caratinga', coord: null, weather: [], base: '', main: null, visibility: null, wind: null, rain: null, clouds: null, dt: null, sys: null, timezone: null, id: null, cod: null);
+      controller.weather.value = WeatherModel(
+        name: 'Caratinga',
+        coord: null,
+        weather: [],
+        base: '',
+        main: null,
+        visibility: null,
+        wind: null,
+        rain: null,
+        clouds: null,
+        dt: null,
+        sys: null,
+        timezone: null,
+        id: null,
+        cod: null,
+      );
 
       await controller.fetchHourlyForecast();
 
@@ -145,10 +177,26 @@ void main() {
     });
 
     test('mantém hourlyForecast vazio em caso de erro', () async {
-      when(() => mockService.getHourlyForecast(city: any(named: 'city')))
-          .thenThrow(Exception('Erro'));
+      when(
+        () => mockService.getHourlyForecast(city: any(named: 'city')),
+      ).thenThrow(Exception('Erro'));
 
-      controller.weather.value = WeatherModel(name: 'Caratinga', coord: null, weather: [], base: '', main: null, visibility: null, wind: null, rain: null, clouds: null, dt: null, sys: null, timezone: null, id: null, cod: null);
+      controller.weather.value = WeatherModel(
+        name: 'Caratinga',
+        coord: null,
+        weather: [],
+        base: '',
+        main: null,
+        visibility: null,
+        wind: null,
+        rain: null,
+        clouds: null,
+        dt: null,
+        sys: null,
+        timezone: null,
+        id: null,
+        cod: null,
+      );
 
       await controller.fetchHourlyForecast();
 
@@ -167,14 +215,30 @@ void main() {
             condition: 'Clear',
             icon: '01d',
             precipitation: 0.0,
-          )
+          ),
         ],
       );
 
-      when(() => mockService.getWeeklyForecast(city: any(named: 'city')))
-          .thenAnswer((_) async => mockWeekly);
+      when(
+        () => mockService.getWeeklyForecast(city: any(named: 'city')),
+      ).thenAnswer((_) async => mockWeekly);
 
-      controller.weather.value = WeatherModel(name: 'Caratinga', coord: null, weather: [], base: '', main: null, visibility: null, wind: null, rain: null, clouds: null, dt: null, sys: null, timezone: null, id: null, cod: null);
+      controller.weather.value = WeatherModel(
+        name: 'Caratinga',
+        coord: null,
+        weather: [],
+        base: '',
+        main: null,
+        visibility: null,
+        wind: null,
+        rain: null,
+        clouds: null,
+        dt: null,
+        sys: null,
+        timezone: null,
+        id: null,
+        cod: null,
+      );
 
       await controller.fetchWeeklyForecast();
 
@@ -183,10 +247,26 @@ void main() {
     });
 
     test('mantém weeklyForecast como null em caso de erro', () async {
-      when(() => mockService.getWeeklyForecast(city: any(named: 'city')))
-          .thenThrow(Exception('Erro'));
+      when(
+        () => mockService.getWeeklyForecast(city: any(named: 'city')),
+      ).thenThrow(Exception('Erro'));
 
-      controller.weather.value = WeatherModel(name: 'Caratinga', coord: null, weather: [], base: '', main: null, visibility: null, wind: null, rain: null, clouds: null, dt: null, sys: null, timezone: null, id: null, cod: null);
+      controller.weather.value = WeatherModel(
+        name: 'Caratinga',
+        coord: null,
+        weather: [],
+        base: '',
+        main: null,
+        visibility: null,
+        wind: null,
+        rain: null,
+        clouds: null,
+        dt: null,
+        sys: null,
+        timezone: null,
+        id: null,
+        cod: null,
+      );
 
       await controller.fetchWeeklyForecast();
 
@@ -204,6 +284,131 @@ void main() {
       final gradient = WeatherUIHelper.getGradient('clear');
       expect(gradient.colors.first, const Color(0xFF47BFDF));
     });
+  });
+  test('fetchWeather atualiza weather e salva no cache', () async {
+    final mockWeather = WeatherModel(
+      name: 'Caratinga',
+      weather: [],
+      coord: null,
+      base: '',
+      main: null,
+      visibility: null,
+      wind: null,
+      rain: null,
+      clouds: null,
+      dt: null,
+      sys: null,
+      timezone: null,
+      id: null,
+      cod: null,
+    );
+    when(
+      () => mockService.fetchWeather(city: any(named: 'city')),
+    ).thenAnswer((_) async => mockWeather);
+
+    controller.testCity = 'Caratinga';
+    await controller.fetchWeather();
+
+    expect(controller.weather.value?.name, 'Caratinga');
+    verify(
+      () => mockStorage.write('clima_salvo', mockWeather.toJson()),
+    ).called(1);
+  });
+
+  test('fetchWeather trata cidade nula', () async {
+    controller.testCity = '';
+    await controller.fetchWeather();
+    expect(controller.errorMessage.value.contains('Cidade nula'), true);
+  });
+
+  test('fetchWeather trata timeout', () async {
+    controller.testCity = 'Caratinga';
+    when(
+      () => mockService.fetchWeather(city: any(named: 'city')),
+    ).thenAnswer((_) => Future.delayed(const Duration(seconds: 10)));
+
+    await controller.fetchWeather();
+    expect(controller.errorMessage.value.contains('Tempo esgotado'), true);
+  });
+
+  test('fetchWeatherByCity atualiza cidade e salva cache', () async {
+    final mockWeather = WeatherModel(
+      name: 'BH',
+      weather: [],
+      coord: null,
+      base: '',
+      main: null,
+      visibility: null,
+      wind: null,
+      rain: null,
+      clouds: null,
+      dt: null,
+      sys: null,
+      timezone: null,
+      id: null,
+      cod: null,
+    );
+    when(
+      () => mockService.fetchWeather(city: any(named: 'city')),
+    ).thenAnswer((_) async => mockWeather);
+
+    await controller.fetchWeatherByCity('BH');
+
+    expect(controller.weather.value?.name, 'BH');
+    expect(controller.city, 'BH');
+  });
+
+  test('fetchWeatherByCity trata erro de cidade inválida', () async {
+    when(
+      () => mockService.fetchWeather(city: any(named: 'city')),
+    ).thenAnswer((_) async => null);
+
+    await controller.fetchWeatherByCity('CidadeInexistente');
+    expect(
+      controller.errorMessage.value.contains('Cidade não encontrada'),
+      true,
+    );
+  });
+
+  test('salvarClimaLocal não salva se weather for nulo', () {
+    controller.weather.value = null;
+    controller.salvarClimaLocal();
+    verifyNever(() => mockStorage.write(any(), any()));
+  });
+
+  test('carregarClimaLocal carrega dados do storage', () {
+    final json = {'name': 'Caratinga', 'weather': []};
+    when(() => mockStorage.read('clima_salvo')).thenReturn(json);
+
+    controller.carregarClimaLocal();
+    expect(controller.weather.value?.name, 'Caratinga');
+  });
+
+  test('updateBackgroundGradient atualiza gradiente corretamente', () {
+    controller.weather.value = WeatherModel(
+      name: 'Caratinga',
+      weather: [Weather(main: 'Clear', id: 0, description: '', icon: '')],
+      coord: null,
+      base: '',
+      main: null,
+      visibility: null,
+      wind: null,
+      rain: null,
+      clouds: null,
+      dt: null,
+      sys: null,
+      timezone: null,
+      id: null,
+      cod: null,
+    );
+
+    controller.updateBackgroundGradient();
+    expect(controller.backgroundGradient.value.colors.first.value, isNotNull);
+  });
+
+  test('getWeatherIcon retorna ícone válido', () {
+    final icon = controller.getWeatherIcon('01d');
+    expect(icon.codePoint, isNotNull);
   });
 
   group('WeatherIconMapper', () {

@@ -1,4 +1,5 @@
 // test/lib/app/models/weather_model_test.dart
+import 'package:clima_app2/app/models/weather_model/weather_model_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:clima_app2/app/models/weather_model/weather_model.dart';
 import 'package:clima_app2/app/models/daily_forecast/daily_forecast.dart';
@@ -120,4 +121,73 @@ void main() {
       expect(day.precipitation, closeTo(0.05, 0.01));
     });
   });
+    group('WeatherModelExtension', () {
+    test('retorna valores corretos quando todos os dados estão presentes', () {
+      final model = WeatherModel(
+        name: 'Caratinga',
+        weather: [
+          Weather(id: 800, main: 'Clear', description: 'céu limpo', icon: '01d')
+        ],
+        main: Main(
+          temp: 25.0,
+          feelsLike: 26.0,
+          tempMin: 22.0,
+          tempMax: 28.0,
+          pressure: 1012,
+          humidity: 60,
+          seaLevel: 1012,
+          grndLevel: 1000,
+        ),
+        wind: Wind(speed: 3.5, deg: 180, gust: 5.0),
+        coord: null,
+        base: null,
+        visibility: null,
+        rain: null,
+        clouds: null,
+        dt: null,
+        sys: null,
+        timezone: null,
+        id: null,
+        cod: null,
+      );
+
+      expect(model.icon, '01d');
+      expect(model.description, 'céu limpo');
+      expect(model.condition, 'Clear');
+      expect(model.temperature, 25.0);
+      expect(model.humidity, 60);
+      expect(model.pressure, 1012);
+      expect(model.windSpeed, 3.5);
+      expect(model.city, 'Caratinga');
+    });
+
+    test('retorna valores padrão quando dados estão ausentes', () {
+      final model = WeatherModel(
+        name: null,
+        weather: [],
+        main: null,
+        wind: null,
+        coord: null,
+        base: null,
+        visibility: null,
+        rain: null,
+        clouds: null,
+        dt: null,
+        sys: null,
+        timezone: null,
+        id: null,
+        cod: null,
+      );
+
+      expect(model.icon, '01d');
+      expect(model.description, '');
+      expect(model.condition, 'clear');
+      expect(model.temperature, 0.0);
+      expect(model.humidity, 0);
+      expect(model.pressure, 0);
+      expect(model.windSpeed, 0.0);
+      expect(model.city, 'Cidade');
+    });
+  });
+
 }

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:clima_app2/app/controller/weather_controller.dart';
 import 'package:clima_app2/app/core/utils/helpers/get_background/background_theme.dart';
-import 'package:clima_app2/app/core/widgets/forecast_details/forecast_details.dart';
-import 'package:clima_app2/app/core/widgets/minimal_details/minimal_details.dart';
-import 'package:clima_app2/app/core/widgets/today_details/today_details.dart';
+import 'package:clima_app2/app/core/utils/widgets/forecast_details/forecast_details.dart';
+import 'package:clima_app2/app/core/utils/widgets/minimal_details/minimal_details.dart';
+import 'package:clima_app2/app/core/utils/widgets/today_details/today_details.dart';
 import 'package:clima_app2/app/models/weather_model/weather_model_extension.dart';
 import 'package:clima_app2/app/view/search_screen/search_screen.dart';
 

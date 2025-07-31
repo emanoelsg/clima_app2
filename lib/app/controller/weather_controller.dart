@@ -9,7 +9,7 @@ import 'package:clima_app2/app/models/hourly_model/hourly_model.dart';
 import 'package:clima_app2/app/models/weekly_model/weekly_forecast_model.dart';
 import 'package:clima_app2/app/models/daily_forecast/daily_forecast.dart';
 import 'package:clima_app2/app/service/weather_service.dart';
-import 'package:clima_app2/app/core/utils/helpers/localization/get_current_city.dart';
+import 'package:clima_app2/app/core/utils/helpers/localization/localization.dart';
 
 class WeatherController extends GetxController {
 
