@@ -1,6 +1,6 @@
 // test/lib/app/models/weekly_model.dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:clima_app2/app/models/daily_forecast/daily_forecast.dart';
+import 'package:clima_app2/app/data/models/daily_forecast/daily_forecast.dart';
 
 void main() {
   group('DailyForecast', () {
@@ -44,23 +44,26 @@ void main() {
       expect(json['precipitation'], 0.0);
     });
 
-    test('fromJson deve aplicar valores padrão quando campos estão ausentes', () {
-      final json = {
-        'date': 1627776000000,
-        // maxTemp ausente
-        // minTemp ausente
-        // condition ausente
-        // icon ausente
-        // precipitation ausente
-      };
+    test(
+      'fromJson deve aplicar valores padrão quando campos estão ausentes',
+      () {
+        final json = {
+          'date': 1627776000000,
+          // maxTemp ausente
+          // minTemp ausente
+          // condition ausente
+          // icon ausente
+          // precipitation ausente
+        };
 
-      final forecast = DailyForecast.fromJson(json);
+        final forecast = DailyForecast.fromJson(json);
 
-      expect(forecast.maxTemp, 0.0);
-      expect(forecast.minTemp, 0.0);
-      expect(forecast.condition, 'Indefinido');
-      expect(forecast.icon, '01d');
-      expect(forecast.precipitation, 0.0);
-    });
+        expect(forecast.maxTemp, 0.0);
+        expect(forecast.minTemp, 0.0);
+        expect(forecast.condition, 'Indefinido');
+        expect(forecast.icon, '01d');
+        expect(forecast.precipitation, 0.0);
+      },
+    );
   });
 }

@@ -1,10 +1,10 @@
 // test/lib/app/models/weather_model_test.dart
-import 'package:clima_app2/app/models/weather_model/weather_model_extension.dart';
+import 'package:clima_app2/app/data/models/weather_model/weather_model_extension.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:clima_app2/app/models/weather_model/weather_model.dart';
-import 'package:clima_app2/app/models/daily_forecast/daily_forecast.dart';
-import 'package:clima_app2/app/models/hourly_model/hourly_model.dart';
-import 'package:clima_app2/app/models/weekly_model/weekly_forecast_model.dart';
+import 'package:clima_app2/app/data/models/weather_model/weather_model.dart';
+import 'package:clima_app2/app/data/models/daily_forecast/daily_forecast.dart';
+import 'package:clima_app2/app/data/models/hourly_model/hourly_model.dart';
+import 'package:clima_app2/app/data/models/weekly_model/weekly_forecast_model.dart';
 
 void main() {
   group('WeatherModel', () {
@@ -17,7 +17,7 @@ void main() {
             'main': 'Clear',
             'description': 'céu limpo',
             'icon': '01d',
-          }
+          },
         ],
         'base': 'stations',
         'main': {
@@ -96,7 +96,7 @@ void main() {
             'dt': DateTime(2025, 7, 27, 9).millisecondsSinceEpoch ~/ 1000,
             'main': {'temp': 22.0},
             'weather': [
-              {'description': 'Clear sky', 'icon': '01d'}
+              {'description': 'Clear sky', 'icon': '01d'},
             ],
             'pop': 0.1,
           },
@@ -104,11 +104,11 @@ void main() {
             'dt': DateTime(2025, 7, 27, 15).millisecondsSinceEpoch ~/ 1000,
             'main': {'temp': 28.0},
             'weather': [
-              {'description': 'Clear sky', 'icon': '01d'}
+              {'description': 'Clear sky', 'icon': '01d'},
             ],
             'pop': 0.0,
           },
-        ]
+        ],
       };
 
       final forecast = WeeklyForecast.fromJson(mockJson);
@@ -121,12 +121,17 @@ void main() {
       expect(day.precipitation, closeTo(0.05, 0.01));
     });
   });
-    group('WeatherModelExtension', () {
+  group('WeatherModelExtension', () {
     test('retorna valores corretos quando todos os dados estão presentes', () {
       final model = WeatherModel(
         name: 'Caratinga',
         weather: [
-          Weather(id: 800, main: 'Clear', description: 'céu limpo', icon: '01d')
+          Weather(
+            id: 800,
+            main: 'Clear',
+            description: 'céu limpo',
+            icon: '01d',
+          ),
         ],
         main: Main(
           temp: 25.0,
@@ -189,5 +194,4 @@ void main() {
       expect(model.city, 'Cidade');
     });
   });
-
 }

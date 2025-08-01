@@ -1,10 +1,10 @@
-// integration_test/weather_controller_test.dart
-import 'package:clima_app2/app/controller/weather_controller.dart';
+// integration_test/get_storage_test.dart
+
+import 'package:clima_app2/app/presentation/controller/weather_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:clima_app2/app/models/weather_model/weather_model.dart';
-
+import 'package:clima_app2/app/data/models/weather_model/weather_model.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +26,9 @@ void main() {
     expect(clima?.name?.toLowerCase(), contains('belo horizonte'));
   });
 
-  testWidgets('WeatherController salva e carrega clima local corretamente', (WidgetTester tester) async {
+  testWidgets('WeatherController salva e carrega clima local corretamente', (
+    WidgetTester tester,
+  ) async {
     await GetStorage.init();
     final controller = WeatherController();
 
@@ -34,12 +36,7 @@ void main() {
     controller.weather.value = WeatherModel(
       coord: Coord(lon: -42.0, lat: -19.0),
       weather: [
-        Weather(
-          id: 800,
-          main: 'Clear',
-          description: 'céu limpo',
-          icon: '01d',
-        ),
+        Weather(id: 800, main: 'Clear', description: 'céu limpo', icon: '01d'),
       ],
       base: 'stations',
       main: Main(
