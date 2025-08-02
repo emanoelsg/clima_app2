@@ -17,21 +17,16 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateMixin {
-  // 🎞️ Animações de entrada e toque
   late final AnimationController _fadeController;
   late final Animation<double> _fadeAnimation;
-
   late final AnimationController _tapController;
   late final Animation<double> _tapAnimation;
 
-  // 🌦️ Controller de clima
   late final WeatherController controller;
-
-  // ⏱️ Timers para frases e timeout
   late Timer _phraseTimer;
   late Timer _timeoutTimer;
+  late Timer _gpsCheckTimer;
 
-  // 💬 Frases animadas
   final List<String> _phrases = [
     'Você sabia? Já nevou em Curitiba em 1975! 🌨️',
     'Dica: Toque no nome da cidade para buscar outro lugar 🗺️',
@@ -46,8 +41,19 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
   void initState() {
     super.initState();
 
-    controller = Get.put(WeatherController());
+    controller = Get.find<WeatherController>();
+
     _loadingText = 'Buscando clima em ${controller.city}...';
+
+    // ⏳ Verifica GPS a cada 10 segundos
+    _gpsCheckTimer = Timer.periodic(const Duration(seconds: 10), (timer) async {
+      if (controller.weather.value == null && !controller.isLoading.value) {
+        final sucesso = await controller.loadAll();
+        if (sucesso && mounted) {
+          Get.offAllNamed('/home');
+        }
+      }
+    });
 
     // 🎞️ Animação de fade-in
     _fadeController = AnimationController(
@@ -110,6 +116,7 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
     _tapController.dispose();
     _phraseTimer.cancel();
     _timeoutTimer.cancel();
+    _gpsCheckTimer.cancel(); // ✅ cancelamento adicionado
     super.dispose();
   }
 
@@ -118,92 +125,79 @@ class _LoadingScreenState extends State<LoadingScreen> with TickerProviderStateM
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
-    return Obx(() {
-      // ✅ Quando os dados estiverem prontos, redireciona para a tela principal
-      if (!controller.isLoading.value && controller.weather.value != null) {
-        Future.microtask(() {
-          Get.offAllNamed('/home');
-        });
-      }
-
-      return Scaffold(
-        backgroundColor: AppColors.backgroundTop,
-        body: Stack(
-          children: [
-            SafeArea(
-              child: Center(
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // 🌧️ Logo animado com toque
-                      AnimatedBuilder(
-                        animation: _tapAnimation,
-                        builder: (_, child) => Transform.scale(
-                          scale: _tapAnimation.value,
-                          child: child,
-                        ),
-                        child: GestureDetector(
-                          onTap: () => _tapController.forward(),
-                          child: Image.asset(
-                            'assets/splash_logo/logo.png',
-                            width: 140,
-                            height: 140,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      // 💬 Frase animada
-                      AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 500),
-                        child: Text(
-                          _loadingText,
-                          key: ValueKey(_loadingText),
-                          textAlign: TextAlign.center,
-                          style: textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textPrimary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 32),
-
-                      // 📊 Barra de progresso
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: LinearProgressIndicator(
-                            color: colorScheme.primary,
-                            backgroundColor: colorScheme.primary.withOpacity(0.2),
-                            minHeight: 6,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // 📢 Aviso sobre GPS e internet
-                      Text(
-                        'Verifique se seu GPS e internet estão ligados',
-                        textAlign: TextAlign.center,
-                        style: textTheme.bodySmall?.copyWith(
-                          color: AppColors.textSecondary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+    return Scaffold(
+      backgroundColor: AppColors.backgroundTop,
+      body: SafeArea(
+        child: Center(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // 🌧️ Logo animado com toque
+                AnimatedBuilder(
+                  animation: _tapAnimation,
+                  builder: (_, child) => Transform.scale(
+                    scale: _tapAnimation.value,
+                    child: child,
+                  ),
+                  child: GestureDetector(
+                    onTap: () => _tapController.forward(),
+                    child: Image.asset(
+                      'assets/splash_logo/logo.png',
+                      width: 140,
+                      height: 140,
+                    ),
                   ),
                 ),
-              ),
+
+                const SizedBox(height: 24),
+
+                // 💬 Frase animada
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  child: Text(
+                    _loadingText,
+                    key: ValueKey(_loadingText),
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 32),
+
+                // 📊 Barra de progresso
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: LinearProgressIndicator(
+                      color: colorScheme.primary,
+                      backgroundColor: colorScheme.primary.withOpacity(0.2),
+                      minHeight: 6,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // 📢 Aviso sobre GPS e internet
+                Text(
+                  'Verifique se seu GPS e internet estão ligados',
+                  textAlign: TextAlign.center,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      );
-    });
+      ),
+    );
   }
 }

@@ -1,6 +1,7 @@
 // main.dart
 
 // 🌐 Imports de pacotes externos
+import 'package:clima_app2/app/presentation/view/bindings/weather_binding.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -31,16 +32,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.dark,
-
-      // 🧭 Define rotas nomeadas para navegação
-      routes: {
-        '/': (context) => LoadingScreen(),
-        '/home': (context) => const HomeScreen(),
-        '/search': (context) => SearchScreen(),
-      },
-    );
+    return  GetMaterialApp(
+  debugShowCheckedModeBanner: false,
+  theme: AppTheme.dark,
+  initialRoute: '/',
+  getPages: [
+    GetPage(
+      name: '/',
+      page: () => const LoadingScreen(),
+      binding: WeatherBinding(),
+    ),
+    GetPage(
+      name: '/home',
+      page: () => const HomeScreen(),
+    ),
+    GetPage(
+      name: '/search',
+      page: () => SearchScreen(),
+    ),
+  ],
+);
   }
 }

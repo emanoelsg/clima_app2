@@ -1,12 +1,9 @@
 // app/presentation/view/search_screen/search_screen.dart
+import 'dart:ui';
 
-// 🌐 Imports de pacotes externos
-import 'dart:ui'; // necessário para o efeito de blur
+import 'package:clima_app2/app/presentation/controller/weather_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-// 📦 Imports internos do projeto
-import 'package:clima_app2/app/presentation/controller/weather_controller.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -20,28 +17,33 @@ class _SearchScreenState extends State<SearchScreen> {
   final WeatherController controller = Get.find<WeatherController>();
 
   @override
-  Widget build(BuildContext context) {
-    return Obx(() {
-      final isLoading = controller.isLoading.value;
+  void dispose() {
+    _cityController.dispose();
+    super.dispose();
+  }
 
-      return Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.all(16),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.all(16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Obx(() {
+              final isLoading = controller.isLoading.value;
+
+              return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // 🏷️ Título
                   const Text(
                     'Buscar cidade',
                     style: TextStyle(
@@ -51,56 +53,61 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-
                   const SizedBox(height: 20),
 
-                  // 🔍 Campo de texto
                   TextField(
                     controller: _cityController,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: 'Digite o nome da cidade',
-                      hintStyle: const TextStyle(color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.white70),
                       filled: true,
-                      fillColor: Colors.grey[850],
+                      fillColor: Colors.grey[900],
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
                       ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     ),
+                    textInputAction: TextInputAction.search,
+                    onSubmitted: (_) => _searchCity(),
                   ),
 
                   const SizedBox(height: 20),
 
-                  // 🔘 Botão de busca
-                  ElevatedButton.icon(
-                    onPressed: isLoading ? null : _searchCity,
-                    icon: const Icon(Icons.search),
-                    label: const Text('Buscar'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      foregroundColor: Colors.white,
-                    ),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: isLoading
+                        ? const Center(child: CircularProgressIndicator(color: Colors.white))
+                        : ElevatedButton.icon(
+                            key: const ValueKey('searchButton'),
+                            onPressed: _searchCity,
+                            icon: const Icon(Icons.search),
+                            label: const Text('Buscar'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blueAccent,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                          ),
                   ),
                 ],
-              ),
-            ),
+              );
+            }),
           ),
         ),
-      );
-    });
+      ),
+    );
   }
 
-  // 🔎 Lógica de busca e validação
   void _searchCity() async {
     final city = _cityController.text.trim();
 
-    if (city.length < 2) {
-      Get.snackbar(
-        'Aviso',
-        'Digite pelo menos 2 letras.',
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-      );
+    if (!_isValidCity(city)) {
+      _showSnackbar('Aviso', 'Digite pelo menos 2 letras.', Colors.orange);
       return;
     }
 
@@ -108,20 +115,22 @@ class _SearchScreenState extends State<SearchScreen> {
 
     if (controller.errorMessage.isEmpty) {
       _cityController.clear();
-      Get.back(); // Fecha o diálogo
+      Get.back();
     } else {
-      Get.snackbar(
-        'Erro',
-        controller.errorMessage.value,
-        backgroundColor: Colors.redAccent,
-        colorText: Colors.white,
-      );
+      _showSnackbar('Erro', controller.errorMessage.value, Colors.redAccent);
     }
   }
 
-  @override
-  void dispose() {
-    _cityController.dispose(); // Libera o controlador ao sair
-    super.dispose();
+  bool _isValidCity(String city) => city.length >= 2;
+
+  void _showSnackbar(String title, String message, Color color) {
+    Get.snackbar(
+      title,
+      message,
+      backgroundColor: color,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.BOTTOM,
+      margin: const EdgeInsets.all(12),
+    );
   }
 }

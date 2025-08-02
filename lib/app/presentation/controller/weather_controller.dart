@@ -1,9 +1,9 @@
 // app/presentation/controller/weather_controller.dart
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:clima_app2/app/data/service/weather_service.dart';
 import 'package:clima_app2/app/data/models/weather_model/weather_model.dart';
@@ -36,15 +36,14 @@ class WeatherController extends GetxController {
 
   final isLoading = false.obs;
   final errorMessage = ''.obs;
+  final isOfflineMode = false.obs;
 
   WeatherController({WeatherService? service, GetStorage? storage})
       : weatherService = service ?? WeatherService(),
         storage = storage ?? GetStorage();
 
-  /// 🌤️ Condição atual (ex: Clear, Rain, Snow)
   String get condition => weather.value?.weather.first.main ?? 'Clear';
 
-  /// 🧪 Setter para testes
   @visibleForTesting
   set testCity(String city) => _currentCity = city;
 
@@ -55,13 +54,32 @@ class WeatherController extends GetxController {
     loadAll();
   }
 
+  /// 🔐 Verifica permissão de localização
+  Future<bool> verificarPermissaoLocalizacao() async {
+    LocationPermission status = await Geolocator.checkPermission();
+    if (status == LocationPermission.denied) {
+      status = await Geolocator.requestPermission();
+    }
+    return status == LocationPermission.always || status == LocationPermission.whileInUse;
+  }
+
   /// 🔄 Carrega todos os dados climáticos
-  Future<void> loadAll() async {
+  Future<bool> loadAll() async {
     debugPrint('[WeatherController] Iniciando loadAll');
     isLoading.value = true;
     errorMessage.value = '';
+    isOfflineMode.value = false;
 
     try {
+      final permissao = await verificarPermissaoLocalizacao();
+      if (!permissao) {
+        errorMessage.value = 'Permissão de localização negada.';
+        debugPrint('[WeatherController] Permissão negada');
+        carregarClimaLocal();
+        isOfflineMode.value = true;
+        return false;
+      }
+
       if (_currentCity == null || _currentCity!.isEmpty) {
         _currentCity = await getCurrentCity();
       }
@@ -70,7 +88,8 @@ class WeatherController extends GetxController {
         errorMessage.value = 'Localização não disponível. Ligue o GPS.';
         debugPrint('[WeatherController] GPS falhou');
         carregarClimaLocal();
-        return;
+        isOfflineMode.value = true;
+        return false;
       }
 
       debugPrint('[WeatherController] Cidade detectada: $_currentCity');
@@ -80,16 +99,19 @@ class WeatherController extends GetxController {
         fetchHourlyForecast(),
         fetchWeeklyForecast(),
       ]);
+
+      return true;
     } catch (e) {
       errorMessage.value = 'Erro ao carregar dados: $e';
       debugPrint('[WeatherController] Erro: $e');
       carregarClimaLocal();
+      isOfflineMode.value = true;
+      return false;
     } finally {
       isLoading.value = false;
     }
   }
 
-  /// 🌡️ Busca clima atual
   Future<void> fetchWeather() async {
     debugPrint('[WeatherController] Buscando clima para $_currentCity');
     isLoading.value = true;
@@ -105,33 +127,28 @@ class WeatherController extends GetxController {
           .timeout(const Duration(seconds: 8));
 
       if (result == null) {
-        errorMessage.value = 'Não foi possível obter os dados do clima.';
-        debugPrint('[WeatherController] Clima não encontrado');
-        carregarClimaLocal();
-      } else {
-        weather.value = result;
-        salvarClimaLocal();
-        debugPrint('[WeatherController] Clima: ${result.main?.temp}°C');
+        throw Exception('Dados não encontrados');
       }
 
+      weather.value = result;
+      salvarClimaLocal();
       updateBackgroundGradient();
+
+      debugPrint('[WeatherController] Clima: ${result.main?.temp}°C');
     } on TimeoutException {
       errorMessage.value = 'Tempo esgotado. Verifique sua conexão com a internet.';
-      carregarClimaLocal();
     } catch (e) {
       errorMessage.value = 'Erro ao buscar clima: $e';
-      debugPrint('[WeatherController] Erro inesperado: $e');
-      carregarClimaLocal();
     } finally {
       isLoading.value = false;
     }
   }
 
-  /// 🔍 Busca clima manual por cidade
   Future<void> fetchWeatherByCity(String city) async {
     debugPrint('[WeatherController] Buscando clima manual para: $city');
     isLoading.value = true;
     errorMessage.value = '';
+    isOfflineMode.value = false;
 
     try {
       final result = await weatherService
@@ -163,7 +180,6 @@ class WeatherController extends GetxController {
     }
   }
 
-  /// ⏰ Busca previsão por hora
   Future<void> fetchHourlyForecast() async {
     try {
       final city = weather.value?.name ?? _currentCity;
@@ -179,7 +195,6 @@ class WeatherController extends GetxController {
     }
   }
 
-  /// 📅 Busca previsão semanal
   Future<void> fetchWeeklyForecast() async {
     try {
       final city = weather.value?.name ?? _currentCity;
@@ -196,7 +211,6 @@ class WeatherController extends GetxController {
     }
   }
 
-  /// 💾 Salva clima localmente
   void salvarClimaLocal() {
     final data = weather.value?.toJson();
     if (data != null) {
@@ -205,26 +219,23 @@ class WeatherController extends GetxController {
     }
   }
 
-  /// 📦 Carrega clima salvo
   void carregarClimaLocal() {
     final json = storage.read('clima_salvo');
     if (json != null) {
       weather.value = WeatherModel.fromJson(json);
+      updateBackgroundGradient();
       debugPrint('[WeatherController] Cache carregado');
     } else {
       debugPrint('[WeatherController] Nenhum cache disponível');
     }
   }
 
-  /// 🎨 Atualiza gradiente de fundo com base na condição
   void updateBackgroundGradient() {
     backgroundGradient.value = WeatherVisualHelper.getGradient(condition);
     debugPrint('[WeatherController] Gradiente para $condition');
   }
 
-  /// 🌤️ Retorna ícone do clima com base no código
- IconData getWeatherIcon(String code) {
-  return WeatherVisualHelper.getIconFromCode(code);
-}
-
+  IconData getWeatherIcon(String code) {
+    return WeatherVisualHelper.getIconFromCode(code);
+  }
 }
