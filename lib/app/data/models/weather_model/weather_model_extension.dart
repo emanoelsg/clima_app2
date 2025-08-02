@@ -8,8 +8,11 @@ extension WeatherModelExtension on WeatherModel {
   String get description =>
       (weather.isNotEmpty) ? weather.first.description ?? '' : '';
 
-  String get condition =>
-      (weather.isNotEmpty) ? weather.first.main ?? 'clear' : 'clear';
+String get condition =>
+    (weather.isNotEmpty)
+        ? weather.first.main ?? 'clear'
+        : 'clear';
+
 
   double get temperature => main?.temp ?? 0.0;
 

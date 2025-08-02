@@ -1,5 +1,6 @@
 // app/presentation/controller/weather_controller.dart
 import 'dart:async';
+import 'package:clima_app2/app/data/models/weather_model/weather_model_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -42,7 +43,7 @@ class WeatherController extends GetxController {
       : weatherService = service ?? WeatherService(),
         storage = storage ?? GetStorage();
 
-  String get condition => weather.value?.weather.first.main ?? 'Clear';
+  String get condition =>  weather.value?.condition?? 'Clear';
 
   @visibleForTesting
   set testCity(String city) => _currentCity = city;

@@ -354,7 +354,23 @@ group('WeatherVisualHelper', () {
     });
 
     test('carregarClimaLocal carrega dados do storage', () {
-      final json = {'name': 'Caratinga', 'weather': []};
+     final json = {
+  'coord': {'lon': -42.0, 'lat': -19.0},
+  'weather': [],
+  'main': {
+    'temp': 25.0,
+    'feels_like': 25.0,
+    'temp_min': 20.0,
+    'temp_max': 30.0,
+    'pressure': 1013,
+    'humidity': 80,
+    'sea_level': 1013,
+    'grnd_level': 1013,
+  },
+  'wind': {'speed': 5.0, 'deg': 180, 'gust': 7.0},
+  'sys': {'type': 1, 'id': 123, 'country': 'BR', 'sunrise': 1234567890, 'sunset': 1234567990},
+  'name': 'Caratinga',
+};
       when(() => mockStorage.read('clima_salvo')).thenReturn(json);
 
       controller.carregarClimaLocal();
