@@ -8,12 +8,12 @@ import 'package:clima_app2/app/data/models/hourly_model/hourly_model.dart';
 
 
 class TodayForecastList extends StatelessWidget {
-  final List<HourlyForecast> forecast;
-
   const TodayForecastList({
     super.key,
     required this.forecast,
   });
+
+  final List<HourlyForecast> forecast;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,11 @@ class TodayForecastList extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 24),
             child: Text(
               'Hoje',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           const SizedBox(height: 12),

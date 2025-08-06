@@ -1,21 +1,18 @@
 // app/presentation/view/home_page/home_page.dart
-
-// 🌐 Imports de pacotes externos
 import 'package:clima_app2/app/core/helpers/ui_helper.dart';
 import 'package:clima_app2/app/presentation/view/search_screen/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-// 📦 Imports internos do projeto
 import 'package:clima_app2/app/presentation/controller/weather_controller.dart';
 import 'package:clima_app2/app/presentation/widgets/forecast_details/forecast_details.dart';
 import 'package:clima_app2/app/presentation/widgets/minimal_details/minimal_details.dart';
 import 'package:clima_app2/app/presentation/widgets/today_details/today_details.dart';
 import 'package:clima_app2/app/data/models/weather_model/weather_model_extension.dart';
 
-
- class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
@@ -24,7 +21,6 @@ import 'package:clima_app2/app/data/models/weather_model/weather_model_extension
 
 class _HomeScreenState extends State<HomeScreen> {
   final controller = Get.find<WeatherController>();
-
   final TextEditingController _cityController = TextEditingController();
 
   @override
@@ -88,49 +84,72 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   }
-//to( SearchScreen()),
+
                   return ListView(
-                    padding: const EdgeInsets.symmetric(vertical: 24),
+                    padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
                     children: [
-                      // 🔍 Barra superior com cidade e data
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: TextButton.icon(
-                                onPressed: isLoading ? null : () => Get.dialog( const SearchScreen()),
-                                icon: const Icon(Icons.search, color: Colors.white),
-                                label: Text(
-                                  weather.city,
-                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                      // 🔍 Cabeçalho com cidade e data
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: InkWell(
+                              onTap: isLoading ? null : () => Get.dialog(const SearchScreen()),
+                              splashColor: Colors.white24,
+                              borderRadius: BorderRadius.circular(12),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.search, color: Colors.white),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      weather.city,
+                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                            Text(
-                              today,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Colors.white70,
-                                fontWeight: FontWeight.w500,
-                              ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            today,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.white70,
+                              fontWeight: FontWeight.w500,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
 
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 32),
 
-                      // 🌡️ Clima atual
-                      Icon(
-                        controller.getWeatherIcon(weather.icon),
-                        size: 96,
-                        color: Colors.white,
+                      // 🌡️ Clima atual com animação
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 500),
+                        child: Icon(
+                          controller.getWeatherIcon(weather.icon),
+                          key: ValueKey(weather.icon),
+                          size: 100,
+                          color: Colors.white,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       Text(
                         '${weather.temperature.toStringAsFixed(0)}°',
-                        style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white),
+                        style: GoogleFonts.lato(
+                          fontSize: 72,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w300,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       Text(
@@ -139,33 +158,39 @@ class _HomeScreenState extends State<HomeScreen> {
                         textAlign: TextAlign.center,
                       ),
 
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 32),
 
-                      // 📊 Detalhes em card
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Card(
+                      // 📊 Card de detalhes com sombra
+                      Container(
+                        decoration: BoxDecoration(
                           color: accent,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: WeatherDetailsRow(
-                              humidity: weather.humidity,
-                              pressure: weather.pressure,
-                              windSpeed: weather.windSpeed,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.25),
+                              blurRadius: 12,
+                              offset: const Offset(0, 6),
                             ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: WeatherDetailsRow(
+                            humidity: weather.humidity,
+                            pressure: weather.pressure,
+                            windSpeed: weather.windSpeed,
                           ),
                         ),
                       ),
 
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 32),
 
                       // ⏱️ Previsão por hora
                       RepaintBoundary(
                         child: TodayForecastList(forecast: controller.hourlyForecast),
                       ),
 
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 32),
 
                       // 📅 Previsão semanal
                       RepaintBoundary(
