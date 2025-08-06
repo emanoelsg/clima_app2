@@ -43,7 +43,9 @@ class WeatherVisualHelper {
       return [Color(0xFF3C3F41), Color(0xFF5C6370)];
     } else if (cond.contains('thunder')) {
       return [Color(0xFF373B44), Color(0xFF4286f4)];
-    } else if (cond.contains('fog') || cond.contains('mist') || cond.contains('haze')) {
+    } else if (cond.contains('fog') ||
+        cond.contains('mist') ||
+        cond.contains('haze')) {
       return [Color(0xFF606c88), Color(0xFF3f4c6b)];
     } else {
       return [Color(0xFF1E3C72), Color(0xFF2A5298)];
@@ -64,7 +66,9 @@ class WeatherVisualHelper {
       return const Color(0xFF37474F);
     } else if (cond.contains('thunder')) {
       return const Color(0xFF1A237E);
-    } else if (cond.contains('fog') || cond.contains('mist') || cond.contains('haze')) {
+    } else if (cond.contains('fog') ||
+        cond.contains('mist') ||
+        cond.contains('haze')) {
       return const Color(0xFF212121);
     } else {
       return const Color(0xFF2C3E50);

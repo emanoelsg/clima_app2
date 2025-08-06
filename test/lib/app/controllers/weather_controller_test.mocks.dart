@@ -6,8 +6,10 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i4;
 
-import 'package:clima_app2/app/data/models/hourly_model/hourly_model.dart' as _i6;
-import 'package:clima_app2/app/data/models/weather_model/weather_model.dart' as _i5;
+import 'package:clima_app2/app/data/models/hourly_model/hourly_model.dart'
+    as _i6;
+import 'package:clima_app2/app/data/models/weather_model/weather_model.dart'
+    as _i5;
 import 'package:clima_app2/app/data/models/weekly_model/weekly_forecast_model.dart'
     as _i2;
 import 'package:clima_app2/app/data/service/weather_service.dart' as _i3;

@@ -7,24 +7,26 @@ import 'package:clima_app2/app/data/models/weekly_model/weekly_forecast_model.da
 import 'package:clima_app2/app/core/config/api_keys/api_keys.dart';
 
 class WeatherService {
-  static const String _baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
-  static const String _forecastUrl = 'https://api.openweathermap.org/data/2.5/forecast';
+  static const String _baseUrl =
+      'https://api.openweathermap.org/data/2.5/weather';
+  static const String _forecastUrl =
+      'https://api.openweathermap.org/data/2.5/forecast';
   static const Duration _timeout = Duration(seconds: 10);
 
   final Dio _dio;
   final String _apiKey;
 
   WeatherService({Dio? dio, String? apiKey})
-      : _dio = dio ?? Dio(),
-        _apiKey = apiKey ?? ApiKeys.openWeather;
+    : _dio = dio ?? Dio(),
+      _apiKey = apiKey ?? ApiKeys.openWeather;
 
   /// 🔧 Constrói os parâmetros da requisição
   Map<String, dynamic> _buildQuery(String city) => {
-        'q': city,
-        'appid': _apiKey,
-        'units': 'metric',
-        'lang': 'pt_br',
-      };
+    'q': city,
+    'appid': _apiKey,
+    'units': 'metric',
+    'lang': 'pt_br',
+  };
 
   /// 🌤️ Busca o clima atual
   Future<WeatherModel?> fetchWeather({required String city}) async {
@@ -74,9 +76,10 @@ class WeatherService {
       return list.take(8).map((item) {
         final dt = DateTime.parse(item['dt_txt']);
         final weatherList = item['weather'] as List?;
-        final iconCode = weatherList?.isNotEmpty == true
-            ? weatherList![0]['icon'] as String? ?? '01d'
-            : '01d';
+        final iconCode =
+            weatherList?.isNotEmpty == true
+                ? weatherList![0]['icon'] as String? ?? '01d'
+                : '01d';
         final temp = (item['main']['temp'] as num).round();
 
         return HourlyForecast(

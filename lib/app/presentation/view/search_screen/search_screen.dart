@@ -67,7 +67,10 @@ class _SearchScreenState extends State<SearchScreen> {
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 14,
+                      ),
                     ),
                     textInputAction: TextInputAction.search,
                     onSubmitted: (_) => _searchCity(),
@@ -77,22 +80,32 @@ class _SearchScreenState extends State<SearchScreen> {
 
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
-                    child: isLoading
-                        ? const Center(child: CircularProgressIndicator(color: Colors.white))
-                        : ElevatedButton.icon(
-                            key: const ValueKey('searchButton'),
-                            onPressed: _searchCity,
-                            icon: const Icon(Icons.search),
-                            label: const Text('Buscar'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blueAccent,
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                    child:
+                        isLoading
+                            ? const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            )
+                            : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton.icon(
+                                key: const ValueKey('searchButton'),
+                                onPressed: _searchCity,
+                                icon: const Icon(Icons.search),
+                                label: const Text('Buscar'),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blueAccent,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
                   ),
                 ],
               );

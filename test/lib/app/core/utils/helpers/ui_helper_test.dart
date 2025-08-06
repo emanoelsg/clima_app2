@@ -7,10 +7,22 @@ import 'package:flutter/material.dart';
 void main() {
   group('WeatherVisualHelper.getIconFromCode', () {
     test('retorna ícone correto para códigos conhecidos', () {
-      expect(WeatherVisualHelper.getIconFromCode('01d'), WeatherIcons.day_sunny);
-      expect(WeatherVisualHelper.getIconFromCode('01n'), WeatherIcons.night_clear);
-      expect(WeatherVisualHelper.getIconFromCode('02d'), WeatherIcons.day_cloudy);
-      expect(WeatherVisualHelper.getIconFromCode('02n'), WeatherIcons.night_alt_cloudy);
+      expect(
+        WeatherVisualHelper.getIconFromCode('01d'),
+        WeatherIcons.day_sunny,
+      );
+      expect(
+        WeatherVisualHelper.getIconFromCode('01n'),
+        WeatherIcons.night_clear,
+      );
+      expect(
+        WeatherVisualHelper.getIconFromCode('02d'),
+        WeatherIcons.day_cloudy,
+      );
+      expect(
+        WeatherVisualHelper.getIconFromCode('02n'),
+        WeatherIcons.night_alt_cloudy,
+      );
       expect(WeatherVisualHelper.getIconFromCode('03d'), WeatherIcons.cloud);
       expect(WeatherVisualHelper.getIconFromCode('03n'), WeatherIcons.cloud);
       expect(WeatherVisualHelper.getIconFromCode('04d'), WeatherIcons.cloudy);
@@ -18,9 +30,18 @@ void main() {
       expect(WeatherVisualHelper.getIconFromCode('09d'), WeatherIcons.showers);
       expect(WeatherVisualHelper.getIconFromCode('09n'), WeatherIcons.showers);
       expect(WeatherVisualHelper.getIconFromCode('10d'), WeatherIcons.day_rain);
-      expect(WeatherVisualHelper.getIconFromCode('10n'), WeatherIcons.night_alt_rain);
-      expect(WeatherVisualHelper.getIconFromCode('11d'), WeatherIcons.thunderstorm);
-      expect(WeatherVisualHelper.getIconFromCode('11n'), WeatherIcons.thunderstorm);
+      expect(
+        WeatherVisualHelper.getIconFromCode('10n'),
+        WeatherIcons.night_alt_rain,
+      );
+      expect(
+        WeatherVisualHelper.getIconFromCode('11d'),
+        WeatherIcons.thunderstorm,
+      );
+      expect(
+        WeatherVisualHelper.getIconFromCode('11n'),
+        WeatherIcons.thunderstorm,
+      );
       expect(WeatherVisualHelper.getIconFromCode('13d'), WeatherIcons.snow);
       expect(WeatherVisualHelper.getIconFromCode('13n'), WeatherIcons.snow);
       expect(WeatherVisualHelper.getIconFromCode('50d'), WeatherIcons.fog);

@@ -6,12 +6,8 @@ import 'package:get/get.dart';
 import 'package:clima_app2/app/presentation/controller/weather_controller.dart';
 import 'package:clima_app2/app/data/models/hourly_model/hourly_model.dart';
 
-
 class TodayForecastList extends StatelessWidget {
-  const TodayForecastList({
-    super.key,
-    required this.forecast,
-  });
+  const TodayForecastList({super.key, required this.forecast});
 
   final List<HourlyForecast> forecast;
 
@@ -21,7 +17,9 @@ class TodayForecastList extends StatelessWidget {
     final controller = Get.find<WeatherController>();
 
     return Obx(() {
-      final Color accent = WeatherVisualHelper.getAccentColor(controller.condition);
+      final Color accent = WeatherVisualHelper.getAccentColor(
+        controller.condition,
+      );
 
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,

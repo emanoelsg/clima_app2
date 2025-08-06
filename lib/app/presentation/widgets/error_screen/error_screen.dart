@@ -1,14 +1,11 @@
 // app/presentation/widgets/error_screen/error_screen.dart
 import 'package:flutter/material.dart';
+
 class ErrorScreen extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
 
-  const ErrorScreen({
-    super.key,
-    required this.message,
-    required this.onRetry,
-  });
+  const ErrorScreen({super.key, required this.message, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

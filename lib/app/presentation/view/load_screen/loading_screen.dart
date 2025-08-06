@@ -36,14 +36,12 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     _startPhraseTimer();
     _startTimeoutTimer();
-ever(controller.weather, (weatherData) {
-  if (weatherData != null) {
-    Get.off(() => const HomeScreen());
+    ever(controller.weather, (weatherData) {
+      if (weatherData != null) {
+        Get.off(() => const HomeScreen());
+      }
+    });
   }
-});
-  }
-
-
 
   void _startPhraseTimer() {
     _phraseTimer = Timer.periodic(const Duration(seconds: 8), (timer) {
@@ -64,14 +62,14 @@ ever(controller.weather, (weatherData) {
       if (mounted && controller.weather.value == null) {
         Get.defaultDialog(
           title: 'Sem conexão 😕',
-          middleText: 'Não conseguimos buscar o clima. Verifique sua internet ou GPS.',
+          middleText:
+              'Não conseguimos buscar o clima. Verifique sua internet ou GPS.',
           backgroundColor: Colors.grey[900],
           titleStyle: const TextStyle(color: Colors.white),
           middleTextStyle: const TextStyle(color: Colors.white70),
           confirm: ElevatedButton(
             onPressed: () {
               Get.back();
-   
             },
             child: const Text('Tentar novamente'),
           ),
@@ -109,18 +107,20 @@ ever(controller.weather, (weatherData) {
               const SizedBox(height: 24),
 
               // 💬 Frase reativa
-              Obx(() => AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    child: Text(
-                      controller.loadingText.value,
-                      key: ValueKey(controller.loadingText.value),
-                      textAlign: TextAlign.center,
-                      style: textTheme.bodyMedium?.copyWith(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w500,
-                      ),
+              Obx(
+                () => AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  child: Text(
+                    controller.loadingText.value,
+                    key: ValueKey(controller.loadingText.value),
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.w500,
                     ),
-                  )),
+                  ),
+                ),
+              ),
 
               const SizedBox(height: 32),
 

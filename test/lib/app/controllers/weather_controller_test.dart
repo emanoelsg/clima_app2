@@ -272,7 +272,7 @@ void main() {
     });
   });
 
-group('WeatherVisualHelper', () {
+  group('WeatherVisualHelper', () {
     test('getIconFromCode retorna ícone correto para 01d', () {
       final icon = WeatherVisualHelper.getIconFromCode('01d');
       expect(icon, WeatherIcons.day_sunny);
@@ -286,7 +286,10 @@ group('WeatherVisualHelper', () {
     test('getGradient retorna gradiente correto para "Clear"', () {
       final gradient = WeatherVisualHelper.getGradient('Clear');
       expect(gradient, isA<LinearGradient>());
-      expect((gradient as LinearGradient).colors.first, const Color(0xFF47BFDF));
+      expect(
+        (gradient as LinearGradient).colors.first,
+        const Color(0xFF47BFDF),
+      );
     });
 
     test('getAccentColor retorna cor para "Thunderstorm"', () {
@@ -302,15 +305,33 @@ group('WeatherVisualHelper', () {
 
   group('WeatherController', () {
     test('fetchWeather atualiza weather e salva no cache', () async {
-      final mockWeather = WeatherModel(name: 'Caratinga', weather: [], coord: null, base: '', main: null, visibility: null, wind: null, rain: null, clouds: null, dt: null, sys: null, timezone: null, id: null, cod: null);
-      when(() => mockService.fetchWeather(city: any(named: 'city')))
-          .thenAnswer((_) async => mockWeather);
+      final mockWeather = WeatherModel(
+        name: 'Caratinga',
+        weather: [],
+        coord: null,
+        base: '',
+        main: null,
+        visibility: null,
+        wind: null,
+        rain: null,
+        clouds: null,
+        dt: null,
+        sys: null,
+        timezone: null,
+        id: null,
+        cod: null,
+      );
+      when(
+        () => mockService.fetchWeather(city: any(named: 'city')),
+      ).thenAnswer((_) async => mockWeather);
 
       controller.testCity = 'Caratinga';
       await controller.fetchWeather();
 
       expect(controller.weather.value?.name, 'Caratinga');
-      verify(() => mockStorage.write('clima_salvo', mockWeather.toJson())).called(1);
+      verify(
+        () => mockStorage.write('clima_salvo', mockWeather.toJson()),
+      ).called(1);
     });
 
     test('fetchWeather trata cidade nula', () async {
@@ -321,17 +342,34 @@ group('WeatherVisualHelper', () {
 
     test('fetchWeather trata timeout', () async {
       controller.testCity = 'Caratinga';
-      when(() => mockService.fetchWeather(city: any(named: 'city')))
-          .thenAnswer((_) => Future.delayed(const Duration(seconds: 10)));
+      when(
+        () => mockService.fetchWeather(city: any(named: 'city')),
+      ).thenAnswer((_) => Future.delayed(const Duration(seconds: 10)));
 
       await controller.fetchWeather();
       expect(controller.errorMessage.value.contains('Tempo esgotado'), true);
     });
 
     test('fetchWeatherByCity atualiza cidade e salva cache', () async {
-      final mockWeather = WeatherModel(name: 'BH', weather: [], coord: null, base: '', main: null, visibility: null, wind: null, rain: null, clouds: null, dt: null, sys: null, timezone: null, id: null, cod: null);
-      when(() => mockService.fetchWeather(city: any(named: 'city')))
-          .thenAnswer((_) async => mockWeather);
+      final mockWeather = WeatherModel(
+        name: 'BH',
+        weather: [],
+        coord: null,
+        base: '',
+        main: null,
+        visibility: null,
+        wind: null,
+        rain: null,
+        clouds: null,
+        dt: null,
+        sys: null,
+        timezone: null,
+        id: null,
+        cod: null,
+      );
+      when(
+        () => mockService.fetchWeather(city: any(named: 'city')),
+      ).thenAnswer((_) async => mockWeather);
 
       await controller.fetchWeatherByCity('BH');
 
@@ -340,11 +378,15 @@ group('WeatherVisualHelper', () {
     });
 
     test('fetchWeatherByCity trata erro de cidade inválida', () async {
-      when(() => mockService.fetchWeather(city: any(named: 'city')))
-          .thenAnswer((_) async => null);
+      when(
+        () => mockService.fetchWeather(city: any(named: 'city')),
+      ).thenAnswer((_) async => null);
 
       await controller.fetchWeatherByCity('CidadeInexistente');
-      expect(controller.errorMessage.value.contains('Cidade não encontrada'), true);
+      expect(
+        controller.errorMessage.value.contains('Cidade não encontrada'),
+        true,
+      );
     });
 
     test('salvarClimaLocal não salva se weather for nulo', () {
@@ -354,23 +396,29 @@ group('WeatherVisualHelper', () {
     });
 
     test('carregarClimaLocal carrega dados do storage', () {
-     final json = {
-  'coord': {'lon': -42.0, 'lat': -19.0},
-  'weather': [],
-  'main': {
-    'temp': 25.0,
-    'feels_like': 25.0,
-    'temp_min': 20.0,
-    'temp_max': 30.0,
-    'pressure': 1013,
-    'humidity': 80,
-    'sea_level': 1013,
-    'grnd_level': 1013,
-  },
-  'wind': {'speed': 5.0, 'deg': 180, 'gust': 7.0},
-  'sys': {'type': 1, 'id': 123, 'country': 'BR', 'sunrise': 1234567890, 'sunset': 1234567990},
-  'name': 'Caratinga',
-};
+      final json = {
+        'coord': {'lon': -42.0, 'lat': -19.0},
+        'weather': [],
+        'main': {
+          'temp': 25.0,
+          'feels_like': 25.0,
+          'temp_min': 20.0,
+          'temp_max': 30.0,
+          'pressure': 1013,
+          'humidity': 80,
+          'sea_level': 1013,
+          'grnd_level': 1013,
+        },
+        'wind': {'speed': 5.0, 'deg': 180, 'gust': 7.0},
+        'sys': {
+          'type': 1,
+          'id': 123,
+          'country': 'BR',
+          'sunrise': 1234567890,
+          'sunset': 1234567990,
+        },
+        'name': 'Caratinga',
+      };
       when(() => mockStorage.read('clima_salvo')).thenReturn(json);
 
       controller.carregarClimaLocal();
@@ -380,7 +428,19 @@ group('WeatherVisualHelper', () {
     test('updateBackgroundGradient atualiza gradiente corretamente', () {
       controller.weather.value = WeatherModel(
         name: 'Caratinga',
-        weather: [Weather(main: 'Clear', id: 0, description: '', icon: '')], coord: null, base: '', main: null, visibility: null, wind: null, rain: null, clouds: null, dt: null, sys: null, timezone: null, id: null, cod: null,
+        weather: [Weather(main: 'Clear', id: 0, description: '', icon: '')],
+        coord: null,
+        base: '',
+        main: null,
+        visibility: null,
+        wind: null,
+        rain: null,
+        clouds: null,
+        dt: null,
+        sys: null,
+        timezone: null,
+        id: null,
+        cod: null,
       );
 
       controller.updateBackgroundGradient();
@@ -392,5 +452,4 @@ group('WeatherVisualHelper', () {
       expect(icon.codePoint, isNotNull);
     });
   });
-
 }

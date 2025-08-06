@@ -19,13 +19,30 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   final controller = Get.find<WeatherController>();
   final TextEditingController _cityController = TextEditingController();
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeIn,
+    );
+    _fadeController.forward();
+  }
 
   @override
   void dispose() {
     _cityController.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
@@ -107,11 +124,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   children: [
                                     const Icon(Icons.search, color: Colors.white),
                                     const SizedBox(width: 8),
-                                    Text(
-                                      weather.city,
-                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                    Hero(
+                                      tag: 'city-name',
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: Text(
+                                          weather.city,
+                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -135,27 +158,41 @@ class _HomeScreenState extends State<HomeScreen> {
                       // 🌡️ Clima atual com animação
                       AnimatedSwitcher(
                         duration: const Duration(milliseconds: 500),
-                        child: Icon(
-                          controller.getWeatherIcon(weather.icon),
-                          key: ValueKey(weather.icon),
-                          size: 100,
-                          color: Colors.white,
+                        child: Hero(
+                          tag: 'weather-icon',
+                          child: Icon(
+                            controller.getWeatherIcon(weather.icon),
+                            key: ValueKey(weather.icon),
+                            size: 100,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
+
                       const SizedBox(height: 12),
-                      Text(
-                        '${weather.temperature.toStringAsFixed(0)}°',
-                        style: GoogleFonts.lato(
-                          fontSize: 72,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w300,
+
+                      FadeTransition(
+                        opacity: _fadeAnimation,
+                        child: Column(
+                          children: [
+                            Text(
+                              '${weather.temperature.toStringAsFixed(0)}°',
+                              style: GoogleFonts.lato(
+                                fontSize: 72,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w300,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              weather.description,
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        weather.description,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
-                        textAlign: TextAlign.center,
                       ),
 
                       const SizedBox(height: 32),
@@ -187,7 +224,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       // ⏱️ Previsão por hora
                       RepaintBoundary(
-                        child: TodayForecastList(forecast: controller.hourlyForecast),
+                        child: TodayForecastList(
+                          forecast: controller.hourlyForecast,
+                        ),
                       ),
 
                       const SizedBox(height: 32),

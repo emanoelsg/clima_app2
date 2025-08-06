@@ -2,7 +2,6 @@
 
 // 🌐 Imports de pacotes externos
 
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,7 +17,6 @@ Future<void> main() async {
 
   // 🌍 Inicializa formatação de datas para o Brasil
   await initializeDateFormatting('pt_BR', null);
-  
 
   // 💾 Inicializa armazenamento local com GetStorage
   await GetStorage.init();
@@ -32,10 +30,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  GetMaterialApp(
-  debugShowCheckedModeBanner: false,
-  theme: AppTheme.dark,
-  home: const LoadingScreen(),
-);
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.dark,
+      home: const LoadingScreen(),
+    );
   }
 }

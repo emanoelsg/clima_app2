@@ -2,17 +2,13 @@
 import 'weather_model.dart';
 
 extension WeatherModelExtension on WeatherModel {
-  String get icon =>
-      (weather.isNotEmpty) ? weather.first.icon ?? '01d' : '01d';
+  String get icon => (weather.isNotEmpty) ? weather.first.icon ?? '01d' : '01d';
 
   String get description =>
       (weather.isNotEmpty) ? weather.first.description ?? '' : '';
 
-String get condition =>
-    (weather.isNotEmpty)
-        ? weather.first.main ?? 'clear'
-        : 'clear';
-
+  String get condition =>
+      (weather.isNotEmpty) ? weather.first.main ?? 'clear' : 'clear';
 
   double get temperature => main?.temp ?? 0.0;
 

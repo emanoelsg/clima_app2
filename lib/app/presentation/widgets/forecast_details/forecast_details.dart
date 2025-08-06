@@ -20,25 +20,26 @@ class ForecastList extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: forecast.map((day) {
-        // 📅 Formata o dia da semana (ex: Seg, Ter, Qua)
-        final dayLabel = DateFormat('EEE', 'pt_BR').format(day.date);
+      children:
+          forecast.map((day) {
+            // 📅 Formata o dia da semana (ex: Seg, Ter, Qua)
+            final dayLabel = DateFormat('EEE', 'pt_BR').format(day.date);
 
-        // 🌤️ Ícone do clima
-        final icon = controller.getWeatherIcon(day.icon);
+            // 🌤️ Ícone do clima
+            final icon = controller.getWeatherIcon(day.icon);
 
-        return ListTile(
-          leading: Icon(icon, color: Colors.white),
-          title: Text(
-            dayLabel,
-            style: const TextStyle(color: Colors.white),
-          ),
-          trailing: Text(
-            'Min ${day.minTemp.round()}° / Max ${day.maxTemp.round()}°',
-            style: const TextStyle(color: Colors.white),
-          ),
-        );
-      }).toList(),
+            return ListTile(
+              leading: Icon(icon, color: Colors.white),
+              title: Text(
+                dayLabel,
+                style: const TextStyle(color: Colors.white),
+              ),
+              trailing: Text(
+                'Min ${day.minTemp.round()}° / Max ${day.maxTemp.round()}°',
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          }).toList(),
     );
   }
 }
