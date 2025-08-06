@@ -3,11 +3,11 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:clima_app2/app/models/weather_model/weather_model.dart';
-import 'package:clima_app2/app/models/weather_model/weather_model_extension.dart';
+import 'package:clima_app2/app/data/models/weather_model/weather_model.dart';
+import 'package:clima_app2/app/data/models/weather_model/weather_model_extension.dart';
 
-import 'package:clima_app2/app/models/weekly_model/weekly_forecast_model.dart';
-import 'package:clima_app2/app/service/weather_service.dart';
+import 'package:clima_app2/app/data/models/weekly_model/weekly_forecast_model.dart';
+import 'package:clima_app2/app/data/service/weather_service.dart';
 import 'weather_service_test.mocks.dart';
 
 @GenerateMocks([Dio])
