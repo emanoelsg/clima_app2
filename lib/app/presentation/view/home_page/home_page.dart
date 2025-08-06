@@ -2,13 +2,13 @@
 
 // 🌐 Imports de pacotes externos
 import 'package:clima_app2/app/core/helpers/ui_helper.dart';
+import 'package:clima_app2/app/presentation/view/search_screen/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 // 📦 Imports internos do projeto
 import 'package:clima_app2/app/presentation/controller/weather_controller.dart';
-
 import 'package:clima_app2/app/presentation/widgets/forecast_details/forecast_details.dart';
 import 'package:clima_app2/app/presentation/widgets/minimal_details/minimal_details.dart';
 import 'package:clima_app2/app/presentation/widgets/today_details/today_details.dart';
@@ -24,6 +24,7 @@ import 'package:clima_app2/app/data/models/weather_model/weather_model_extension
 
 class _HomeScreenState extends State<HomeScreen> {
   final controller = Get.find<WeatherController>();
+
   final TextEditingController _cityController = TextEditingController();
 
   @override
@@ -87,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   }
-
+//to( SearchScreen()),
                   return ListView(
                     padding: const EdgeInsets.symmetric(vertical: 24),
                     children: [
@@ -97,12 +98,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            TextButton.icon(
-                              onPressed: isLoading ? null : () => Get.toNamed('/search'),
-                              icon: const Icon(Icons.search, color: Colors.white),
-                              label: Text(
-                                weather.city,
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                            Expanded(
+                              child: TextButton.icon(
+                                onPressed: isLoading ? null : () => Get.dialog( const SearchScreen()),
+                                icon: const Icon(Icons.search, color: Colors.white),
+                                label: Text(
+                                  weather.city,
+                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                                ),
                               ),
                             ),
                             Text(

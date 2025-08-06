@@ -26,6 +26,7 @@ class WeatherController extends GetxController {
 
   String? _currentCity;
   String get city => _currentCity ?? 'Cidade desconhecida';
+  final loadingText = ''.obs;
 
   final backgroundGradient = Rx<Gradient>(
     const LinearGradient(
@@ -83,6 +84,8 @@ class WeatherController extends GetxController {
 
       if (_currentCity == null || _currentCity!.isEmpty) {
         _currentCity = await getCurrentCity();
+
+
       }
 
       if (_currentCity == null || _currentCity!.isEmpty) {
@@ -100,6 +103,7 @@ class WeatherController extends GetxController {
         fetchHourlyForecast(),
         fetchWeeklyForecast(),
       ]);
+ print('Clima: ${weather.value}');
 
       return true;
     } catch (e) {

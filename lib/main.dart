@@ -1,7 +1,8 @@
 // main.dart
 
 // 🌐 Imports de pacotes externos
-import 'package:clima_app2/app/presentation/view/bindings/weather_binding.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -9,9 +10,7 @@ import 'package:intl/date_symbol_data_local.dart';
 
 // 📦 Imports internos do projeto
 import 'package:clima_app2/app/core/theme/app_theme.dart';
-import 'package:clima_app2/app/presentation/view/home_page/home_page.dart';
 import 'package:clima_app2/app/presentation/view/load_screen/loading_screen.dart';
-import 'package:clima_app2/app/presentation/view/search_screen/search_screen.dart';
 
 Future<void> main() async {
   // 🔧 Inicializa bindings do Flutter (necessário para chamadas assíncronas antes do runApp)
@@ -19,6 +18,7 @@ Future<void> main() async {
 
   // 🌍 Inicializa formatação de datas para o Brasil
   await initializeDateFormatting('pt_BR', null);
+  
 
   // 💾 Inicializa armazenamento local com GetStorage
   await GetStorage.init();
@@ -35,22 +35,7 @@ class MyApp extends StatelessWidget {
     return  GetMaterialApp(
   debugShowCheckedModeBanner: false,
   theme: AppTheme.dark,
-  initialRoute: '/',
-  getPages: [
-    GetPage(
-      name: '/',
-      page: () => const LoadingScreen(),
-      binding: WeatherBinding(),
-    ),
-    GetPage(
-      name: '/home',
-      page: () => const HomeScreen(),
-    ),
-    GetPage(
-      name: '/search',
-      page: () => SearchScreen(),
-    ),
-  ],
+  home: const LoadingScreen(),
 );
   }
 }
