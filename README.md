@@ -1,4 +1,4 @@
-# 🌤️ Clima App 2
+# 🌤️ Clima App 
 
 Aplicativo de previsão do tempo moderno, intuitivo e responsivo, desenvolvido com Flutter. Detecta automaticamente a localização do usuário (com permissão) e exibe dados climáticos em tempo real, incluindo previsão por hora e semanal. Também funciona offline, utilizando dados armazenados localmente.
 
