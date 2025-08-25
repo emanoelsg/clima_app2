@@ -47,13 +47,6 @@ Aplicativo de previsão do tempo moderno, intuitivo e responsivo, desenvolvido c
 
 ---
 
-## 📦 Estrutura do Projeto
-
-lib/ ├── app/ │   ├── core/         # Temas, helpers e configurações │   ├── data/         # Modelos e serviços de API │   ├── presentation/ # Views, controllers e widgets │   ├── utils/        # Helpers reutilizáveis │   └── main.dart     # Ponto de entrada test/ ├── lib/              # Testes unitários organizados por módulo integration_test/     # Testes de integração
-
-
----
-
 ## 🧪 Testes Automatizados
 
 - ✅ Testes unitários com `flutter_test`, `mocktail`, `mockito`
