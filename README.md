@@ -8,7 +8,7 @@ Aplicativo de previsão do tempo moderno, intuitivo e responsivo, desenvolvido c
 
 | Tela Inicial | Previsão por Hora | Previsão Semanal | Busca por Cidade |
 |--------------|-------------------|------------------|------------------|
-| ![Tela 01](assets/screenshots/flutter_01.png) | ![Tela 02](assets/screenshots/flutter_02.png) | ![Tela 05](assets/screenshots/flutter_05.png) | ![Tela 07](assets/screenshots/flutter_07.png) |
+| ![Tela 01](flutter_01.png) | ![Tela 02](assets/screenshots/flutter_02.png) | ![Tela 05](assets/screenshots/flutter_05.png) | ![Tela 07](assets/screenshots/flutter_07.png) |
 
 ---
 
