@@ -6,7 +6,7 @@ Aplicativo de previsão do tempo moderno, intuitivo e responsivo, desenvolvido c
 
 ## 📸 Demonstração Visual
 
-| Tela Inicial | Previsão por Hora | Previsão Semanal | Busca por Cidade |
+| Tela Inicial | Tela de carregamento | Previsão Semanal | Busca por Cidade |
 |--------------|-------------------|------------------|------------------|
 | ![Tela 01](flutter_01.png) | ![Tela 02](flutter_02.png) | ![Tela 05](flutter_05.png) | ![Tela 07](flutter_07.png) |
 
@@ -70,3 +70,4 @@ Você pode instalar esse APK diretamente em dispositivos Android.
 👨‍💻 Autor
 Desenvolvido por Emanoel da S. Gomes
 📸 Créditos visuais: icons8
+
